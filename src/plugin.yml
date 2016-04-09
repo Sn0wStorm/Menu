@@ -1,0 +1,11 @@
+name: Menu
+version: 0.1
+main: com.snow.menu.P
+authors: [Sn0wStorm]
+softdepend: [XServer, Vault]
+commands:
+  menu:
+    description: Command for Administration
+    aliases: [menü]
+  bcls:
+    description: Command used by Clickable Books (do not change)

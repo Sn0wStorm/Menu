@@ -1,0 +1,9 @@
+# config.yml für Menu
+
+
+MySql:
+  host: localhost
+  port: '8889'
+  user: root
+  database: nMain
+  password: root
