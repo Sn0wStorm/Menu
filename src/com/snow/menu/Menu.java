@@ -383,9 +383,7 @@ public class Menu implements IMenu {
 	// Needs to be called after big changes were made that should be immediately visible
 	@Override
 	public void update() {
-		if (currentViews.isEmpty()) {
-			return;
-		}
+		if (!hasOpenViews()) return;
 
 		MenuView view;
 		for (ListIterator<MenuView> iter = currentViews.listIterator(); iter.hasNext();) {
@@ -411,14 +409,25 @@ public class Menu implements IMenu {
 		}
 	}
 
+	// Updates a specific Button of the Menu to players viewing the Menu
+	// Needs to be called after the Button was changed
+	@Override
+	public void updateButton(Button button) {
+		if (!hasOpenViews()) return;
+
+		for (int i = 0; i < buttons.length; i++) {
+			if (buttons[i] == button) {
+				updateSlot(i);
+				return;
+			}
+		}
+	}
 
 	// Updates the specified slot of the Menu to players viewing the Menu
 	// Needs to be called after one Button was changed
 	@Override
 	public void updateSlot(int slot) {
-		if (currentViews.isEmpty()) {
-			return;
-		}
+		if (!hasOpenViews()) return;
 
 		MenuView view;
 		for (ListIterator<MenuView> iter = currentViews.listIterator(); iter.hasNext();) {
@@ -479,6 +488,12 @@ public class Menu implements IMenu {
 	@Override
 	public <T extends IButton> ButtonIterator<T> iterator(Class<T> clazz) {
 		return new ButtonIterator<T>(this, clazz);
+	}
+
+	// Returns true if any Player is currently viewing this Menu
+	@Override
+	public boolean hasOpenViews() {
+		return !currentViews.isEmpty();
 	}
 
 	// keeps track of opened and closed views

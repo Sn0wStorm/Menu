@@ -10,6 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
@@ -65,7 +66,7 @@ public class BookListener implements Listener {
 		}
 		Location from = event.getFrom();
 		Location to = event.getTo();
-		if (Math.abs(from.getYaw() - to.getYaw()) > 2 || Math.abs(from.getPitch() - to.getPitch()) > 2) {
+		if (Math.abs(from.getYaw() - to.getYaw()) > 4 || Math.abs(from.getPitch() - to.getPitch()) > 4) {
 			illegalAction(event.getPlayer());
 		}
 	}
@@ -98,6 +99,15 @@ public class BookListener implements Listener {
 	@EventHandler(ignoreCancelled = true)
 	public void onTeleport(PlayerTeleportEvent event) {
 		illegalAction(event.getPlayer());
+	}
+
+	@EventHandler(ignoreCancelled = true)
+	public void onItemSpawn(ItemSpawnEvent event) {
+		ItemStack item = event.getEntity().getItemStack();
+		event.setCancelled(item.getType() == Material.BOOK_AND_QUILL
+				&& item.hasItemMeta()
+				&& item.getItemMeta().hasDisplayName()
+				&& item.getItemMeta().getDisplayName().equals("§fRechtsklick"));
 	}
 
 	// The player may not have opened the book for editing... Remove it

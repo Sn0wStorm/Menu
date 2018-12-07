@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import com.snow.menu.Buttons.TopList.TopList;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,6 +16,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
@@ -171,6 +173,11 @@ public class MenuListener implements Listener {
 		ClickSpam.remove(event.getPlayer().getUniqueId());
 		EditableMenuHandler.clear(event.getPlayer().getUniqueId());
 		BItemSelect.removeSelector(event.getPlayer().getUniqueId());
+	}
+
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+	public void onJoin(PlayerJoinEvent event) {
+		TopList.updateNames(event.getPlayer().getUniqueId(), event.getPlayer().getName());
 	}
 
 }

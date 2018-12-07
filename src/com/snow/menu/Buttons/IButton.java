@@ -64,6 +64,9 @@ public interface IButton {
 	// Update this Button in a view for a player
 	void update(MenuView view, Player player);
 
+	// Update this Button for all Players viewing the Menu it is in
+	void update();
+
 	Menu getCurrentMenu();
 
 	void setCurrentMenu(Menu menu, int slot);

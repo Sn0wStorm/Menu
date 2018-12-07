@@ -77,11 +77,9 @@ public class SettingButton extends OnOffButton {
 		if (b != null) {
 			if (b.get()) {
 				return getItem();
-			} else {
-				return getState(0);
 			}
 		}
-		return super.getItem(player, view);
+		return getState(0);
 	}
 
 	@Override

@@ -77,7 +77,7 @@ public class BEditMenu extends OnOffButton implements ImmovableButton {
 			MEdit menu = ((MEdit) currentMenu);
 			return getItem(menu.isEditing(player.getUniqueId()));
 		}
-		return super.getItem(player, view);
+		return getItem();
 	}
 
 	@Override

@@ -55,8 +55,10 @@ public class MEdit extends Menu implements EditableMenu, SaveableMenu {
 	public void setEditing(UUID uuid, boolean editing) {
 		if (editing) {
 			this.editing.add(uuid);
+			edit.startEditing(uuid);
 		} else {
 			this.editing.remove(uuid);
+			edit.stopEditing(uuid);
 		}
 	}
 

@@ -195,6 +195,12 @@ public class Button implements IButton {
 		}
 	}
 
+	// Update this Button for all Players viewing the Menu it is in
+	public void update() {
+		if (currentMenu == null) return;
+		currentMenu.updateButton(this);
+	}
+
 	@Override
 	public Menu getCurrentMenu() {
 		return currentMenu;

@@ -150,6 +150,14 @@ public class EditableMenuHandler implements Selector {
 		}
 	}
 
+	// Called when the Player starts to edit the Menu
+	public void startEditing(UUID player) {
+	}
+
+	// Called when the Player stops to edit the Menu
+	public void stopEditing(UUID player) {
+	}
+
 
 	// Called by a BItemSelect Button when it is clicked and this was registered as selector
 	@Override

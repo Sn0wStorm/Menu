@@ -99,11 +99,18 @@ public interface IMenu extends Iterable<Button> {
 	// Needs to be called after big changes were made that should be immediately visible
 	void update();
 
+	// Updates a specific Button of the Menu to players viewing the Menu
+	// Needs to be called after the Button was changed
+	void updateButton(Button button);
+
 	// Updates the specified slot of the Menu to players viewing the Menu
 	// Needs to be called after one Button was changed
 	void updateSlot(int slot);
 
 	<T extends IButton> ButtonIterator<T> iterator(Class<T> clazz);
+
+	// Returns true if any Player is currently viewing this Menu
+	public boolean hasOpenViews();
 
 	// keeps track of opened and closed views
 	void listOpenView(MenuView view);

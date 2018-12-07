@@ -1,7 +1,9 @@
 package com.snow.menu.Buttons;
 
+import com.snow.menu.MenuView;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 /*
@@ -9,9 +11,12 @@ import org.bukkit.inventory.ItemStack;
   Will always have the two items getItem() and getItem(0)
   The Main item will have a green name, the other a red name
   Lore depending on the on/off state will be added
+
+  Need to override getItem() to return either getOn() or getOff()
+  return condition ? getOn() : getOff();
 */
 
-public class OnOffButton extends StatedButton {
+public abstract class OnOffButton extends StatedButton {
 
 	public OnOffButton(Material type) {
 		super(type);
@@ -59,6 +64,9 @@ public class OnOffButton extends StatedButton {
 	public ItemStack getItem(boolean on) {
 		return on ? getOn() : getOff();
 	}
+
+	@Override
+	public abstract ItemStack getItem(Player player, MenuView view);
 
 	protected void initOnOff() {
 		String name = getName();
