@@ -30,7 +30,7 @@ public class BookListener implements Listener {
 		if (event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
 			if (event.hasItem()) {
 				ItemStack item = event.getItem();
-				if (item != null && item.getType().equals(Material.BOOK_AND_QUILL)) {
+				if (item != null && item.getType().equals(Material.WRITABLE_BOOK)) {
 					ItemReplacer replacer = ItemReplacer.get(event.getPlayer().getName());
 					if (replacer != null) {
 						replacer.hasOpened = true;
@@ -104,7 +104,7 @@ public class BookListener implements Listener {
 	@EventHandler(ignoreCancelled = true)
 	public void onItemSpawn(ItemSpawnEvent event) {
 		ItemStack item = event.getEntity().getItemStack();
-		event.setCancelled(item.getType() == Material.BOOK_AND_QUILL
+		event.setCancelled(item.getType() == Material.WRITABLE_BOOK
 				&& item.hasItemMeta()
 				&& item.getItemMeta().hasDisplayName()
 				&& item.getItemMeta().getDisplayName().equals("§fRechtsklick"));
@@ -140,7 +140,7 @@ public class BookListener implements Listener {
 			replacer.revert(player, true);
 			EditableBookText book = replacer.getBook();
 			if (book != null) {
-				List<String> pages = new ArrayList<String>();
+				List<String> pages = new ArrayList<>();
 				BookMeta meta = event.getNewBookMeta();
 				if (meta != null && meta.getPageCount() > 0) {
 					for (String old : meta.getPages()) {

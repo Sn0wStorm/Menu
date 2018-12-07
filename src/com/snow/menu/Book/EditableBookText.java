@@ -14,7 +14,7 @@ import com.snow.menu.P;
 public class EditableBookText extends BookText {
 
 	public EditableBookText() {
-		meta = ((BookMeta) P.p.getServer().getItemFactory().getItemMeta(Material.BOOK_AND_QUILL));
+		meta = ((BookMeta) P.p.getServer().getItemFactory().getItemMeta(Material.WRITABLE_BOOK));
 		meta.setDisplayName("§fRechtsklick");
 	}
 
@@ -23,7 +23,7 @@ public class EditableBookText extends BookText {
 	@Override
 	public void displayTo(Player player) {
 		player.closeInventory();
-		ItemStack book = new ItemStack(Material.BOOK_AND_QUILL);
+		ItemStack book = new ItemStack(Material.WRITABLE_BOOK);
 		if (meta.getPageCount() < 1) {
 			meta.addPage("");
 		}

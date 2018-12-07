@@ -1,26 +1,19 @@
 package com.snow.menu.Util;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
+import net.minecraft.server.v1_13_R2.NBTTagCompound;
+import net.minecraft.server.v1_13_R2.NBTTagList;
+import net.minecraft.server.v1_13_R2.RegistryMaterials;
+import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
-import net.minecraft.server.v1_8_R3.Item;
-import net.minecraft.server.v1_8_R3.Items;
-import net.minecraft.server.v1_8_R3.NBTTagCompound;
-import net.minecraft.server.v1_8_R3.NBTTagList;
-import net.minecraft.server.v1_8_R3.PacketPlayOutAttachEntity;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class NMSUtil {
 
 
 	public static ItemStack setGlowing(ItemStack item, boolean glowing){
-		net.minecraft.server.v1_8_R3.ItemStack nmsStack = CraftItemStack.asNMSCopy(item);
+		net.minecraft.server.v1_13_R2.ItemStack nmsStack = CraftItemStack.asNMSCopy(item);
 		NBTTagCompound tag = null;
 		if (!nmsStack.hasTag()) {
 			if (!glowing) {
@@ -41,8 +34,14 @@ public class NMSUtil {
 		return CraftItemStack.asCraftMirror(nmsStack);
 	}
 
-	public static ItemStack forceAmount(ItemStack item, int amount) {
-		net.minecraft.server.v1_8_R3.ItemStack nmsStack = CraftItemStack.asNMSCopy(item);
+	public static List<ItemStack> getAllItems() {
+		return RegistryMaterials.ITEM.f()
+				.map(CraftItemStack::asNewCraftStack)
+				.collect(Collectors.toList());
+	}
+
+	/*public static ItemStack forceAmount(ItemStack item, int amount) {
+		net.minecraft.server.v1_13_R2.ItemStack nmsStack = CraftItemStack.asNMSCopy(item);
 		nmsStack.count = amount;
 		return CraftItemStack.asCraftMirror(nmsStack);
 	}
@@ -57,16 +56,8 @@ public class NMSUtil {
 		((CraftPlayer) receiver).getHandle().playerConnection.sendPacket(packet);
 	}
 
-	public static List<ItemStack> getAllItems() {
-		List<ItemStack> items = new ArrayList<ItemStack>();
-		for (Item i : Item.REGISTRY) {
-			items.add(CraftItemStack.asNewCraftStack(i));
-		}
-		return items;
-	}
-
 	public static String getLocalizedName(ItemStack item) {
 		return CraftItemStack.asNMSCopy(item).a();
-	}
+	}*/
 
 }

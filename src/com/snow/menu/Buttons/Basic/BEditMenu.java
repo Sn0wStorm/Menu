@@ -15,7 +15,7 @@ import com.snow.menu.Menus.MEdit;
 public class BEditMenu extends OnOffButton implements ImmovableButton {
 
 	public BEditMenu() {
-		super(Material.CLAY_BRICK, "Menü Bearbeiten");
+		super(Material.BRICKS, "Menü Bearbeiten");
 		getOn().setType(Material.BRICK);
 	}
 

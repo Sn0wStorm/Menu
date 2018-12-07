@@ -14,7 +14,7 @@ import com.snow.menu.P;
 public class BPrevPage extends Button {
 
 	public BPrevPage(PagedMenuHandler pages) {
-		super(Material.BANNER, (short) 15, "Vorherige Seite");
+		super(Material.WHITE_BANNER, "Vorherige Seite");
 		setAmount(pages.getPageIndex());
 		setLoreLine(0, "Seite " + (pages.getPageIndex() + 1) + "/" + pages.getNumPages());
 	}

@@ -8,10 +8,10 @@ import com.snow.menu.Buttons.Button;
 public class BEmptyTile extends Button {
 
 	public BEmptyTile() {
-		super(Material.STAINED_GLASS_PANE, (short) 7, " ");
+		super(Material.LIGHT_GRAY_STAINED_GLASS_PANE," ");
 	}
 
 	public BEmptyTile(DyeColor color) {
-		super(Material.STAINED_GLASS_PANE, color.getWoolData(), " ");
+		super(Material.LIGHT_GRAY_STAINED_GLASS_PANE, color.getWoolData(), " ");
 	}
 }

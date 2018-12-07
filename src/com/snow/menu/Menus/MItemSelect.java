@@ -17,9 +17,7 @@ import com.snow.menu.MenuView;
 import com.snow.menu.Menus.Attributes.NoBackMenu;
 import com.snow.menu.Menus.Attributes.PagedMenu;
 import com.snow.menu.Menus.Attributes.PagedMenuHandler;
-import com.snow.menu.P;
 import com.snow.menu.Util.NMSUtil;
-import com.snow.menu.Util.VaultUtil;
 
 public class MItemSelect extends Menu implements PagedMenu, NoBackMenu {
 
@@ -36,12 +34,8 @@ public class MItemSelect extends Menu implements PagedMenu, NoBackMenu {
 		List<MItemSelect> pages = new ArrayList<MItemSelect>();
 		MItemSelect currentPage = head;
 		pages.add(head);
-		List<ItemStack> all;
-		if (P.p.getServer().getPluginManager().isPluginEnabled("Vault")) {
-			all = VaultUtil.getAllItems();
-		} else {
-			all = NMSUtil.getAllItems();
-		}
+		List<ItemStack> all = NMSUtil.getAllItems();
+
 		for (ItemStack i : all) {
 			//ItemStack i = new ItemStack(mat);
 			if (i != null) {

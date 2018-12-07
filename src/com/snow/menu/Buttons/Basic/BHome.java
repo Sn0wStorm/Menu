@@ -13,7 +13,7 @@ import com.snow.menu.P;
 public class BHome extends Button implements ImmovableButton {
 
 	public BHome() {
-		super(Material.ACACIA_DOOR_ITEM, "Hauptmenü");
+		super(Material.ACACIA_DOOR, "Hauptmenü");
 	}
 
 	public static int getDefaultSlot() {

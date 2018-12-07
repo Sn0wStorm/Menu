@@ -45,7 +45,7 @@ public class MLostMain extends Menu implements EditableMenu {
 				}
 			}
 		}, 10);
-		addButton(new BEmptyTile(DyeColor.SILVER), 4, 8);
+		addButton(new BEmptyTile(), 4, 8);
 		addButton(new BBookText(Material.BOOK, "Ein Menüdialog im Buch"), 4, 6);
 		BLostSettings.init();
 	}

@@ -1,19 +1,21 @@
 package com.snow.menu.Book;
 
 
-import java.util.List;
-
+import com.snow.menu.P;
+import com.snow.mkremins.fanciful.FancyMessage;
+import io.netty.buffer.Unpooled;
+import net.minecraft.server.v1_13_R2.IChatBaseComponent;
+import net.minecraft.server.v1_13_R2.MinecraftKey;
+import net.minecraft.server.v1_13_R2.PacketDataSerializer;
+import net.minecraft.server.v1_13_R2.PacketPlayOutCustomPayload;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftMetaBook;
+import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftMetaBook;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 
-import net.minecraft.server.v1_8_R3.IChatBaseComponent;
-import com.snow.mkremins.fanciful.FancyMessage;
-
-import com.snow.menu.P;
+import java.util.List;
 
 public class BookText {
 
@@ -35,12 +37,12 @@ public class BookText {
 	// Set the Text to this FancyMessage
 	// Does not split pages or format anything
 	public void setText(FancyMessage fancyText) {
-		Object cbc = fancyText.createChatBaseComponent();
-		if (cbc != null && cbc instanceof IChatBaseComponent) {
+		IChatBaseComponent cbc = IChatBaseComponent.ChatSerializer.a(fancyText.toJSONString());
+		if (cbc != null) {
 			if (meta instanceof CraftMetaBook) {
 				CraftMetaBook m = ((CraftMetaBook) meta);
 				m.pages.clear();
-				m.pages.add(((IChatBaseComponent) cbc));
+				m.pages.add(cbc);
 			}
 		}
 	}
@@ -49,13 +51,13 @@ public class BookText {
 	// Does not split pages or format anything
 	public void setText(FancyMessage fancyText, int page) {
 		if (meta instanceof CraftMetaBook) {
-			Object cbc = fancyText.createChatBaseComponent();
-			if (cbc != null && cbc instanceof IChatBaseComponent) {
+			IChatBaseComponent cbc = IChatBaseComponent.ChatSerializer.a(fancyText.toJSONString());
+			if (cbc != null) {
 				CraftMetaBook m = ((CraftMetaBook) meta);
 				if (m.pages.size() < page) {
 					throw new IndexOutOfBoundsException("page index larger than size: " + page + " > " + m.pages.size());
 				}
-				m.pages.set(page, ((IChatBaseComponent) cbc));
+				m.pages.set(page, cbc);
 			}
 		}
 	}
@@ -72,11 +74,9 @@ public class BookText {
 	// Add a new Page with this FancyMessage
 	// Does not split pages or format anything
 	public void addText(FancyMessage fancyText) {
-		Object cbc = fancyText.createChatBaseComponent();
-		if (cbc != null && cbc instanceof IChatBaseComponent) {
-			if (meta instanceof CraftMetaBook) {
-				((CraftMetaBook) meta).pages.add(((IChatBaseComponent) cbc));
-			}
+		IChatBaseComponent cbc = IChatBaseComponent.ChatSerializer.a(fancyText.toJSONString());
+		if (cbc != null && meta instanceof CraftMetaBook) {
+			((CraftMetaBook) meta).pages.add(cbc);
 		}
 	}
 
@@ -103,12 +103,12 @@ public class BookText {
 
 	// The same with Lists
 	public void addLines(List<String> list) {
-		addLines(list.toArray(new String[list.size()]));
+		addLines(list.toArray(new String[0]));
 	}
 
 	// The same with Lists
 	public void setLines(List<String> list) {
-		setLines(list.toArray(new String[list.size()]));
+		setLines(list.toArray(new String[0]));
 	}
 
 	// Display this Text to a Player
@@ -116,14 +116,18 @@ public class BookText {
 		player.closeInventory();
 		final ItemStack book = new ItemStack(Material.WRITTEN_BOOK);
 		book.setItemMeta(meta);
-		final int slot = player.getInventory().getHeldItemSlot();
-		final ItemStack replacing = player.getItemInHand();
-		player.setItemInHand(book);
+		//final int slot = player.getInventory().getHeldItemSlot();
+		final ItemStack replacing = player.getInventory().getItemInOffHand();
+		player.getInventory().setItemInOffHand(book);
 		player.updateInventory();
 
-		((CraftPlayer) player).getHandle().openBook(new net.minecraft.server.v1_8_R3.ItemStack(net.minecraft.server.v1_8_R3.Items.WRITTEN_BOOK));
+		PacketDataSerializer data = new PacketDataSerializer(Unpooled.buffer());
+		data.writeByte(1);
 
-		player.getInventory().setItem(slot, replacing);
+		((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutCustomPayload(new MinecraftKey("book_open"), data));
+		//((CraftPlayer) player).getHandle().openBook(new net.minecraft.server.v1_13_R2.ItemStack(net.minecraft.server.v1_13_R2.Items.WRITTEN_BOOK));
+
+		player.getInventory().setItemInOffHand(replacing);
 		player.updateInventory();
 
 		/*P.p.getServer().getScheduler().scheduleSyncDelayedTask(P.p, new Runnable() {
@@ -213,7 +217,7 @@ public class BookText {
 		if (text.length() <= chars) {
 			return new String[] {text};
 		}
-		String pages[] = new String[(int) Math.ceil(text.length() / chars)];
+		String[] pages = new String[(int) Math.ceil((float) text.length() / (float) chars)];
 		for (int i = 0; i < pages.length; i++) {
 			int from = 256 * i;
 			if (from > text.length()) {

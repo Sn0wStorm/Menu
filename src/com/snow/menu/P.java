@@ -32,9 +32,9 @@ public class P extends JavaPlugin {
 		p = this;
 
 		try {
-			Class.forName( "net.minecraft.server.v1_8_R3.EntityLiving" );
+			Class.forName( "net.minecraft.server.v1_13_R2.EntityLiving" );
 		} catch(ClassNotFoundException e) {
-			log("§cMenu konnte nicht Aktiviert werden, da es Serverversion v1_8_R3 voraussetzt!");
+			log("§cMenu konnte nicht Aktiviert werden, da es Serverversion v1_13_R2 voraussetzt!");
 			p = null;
 			getServer().getPluginManager().disablePlugin(this);
 			return;

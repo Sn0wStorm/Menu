@@ -1,8 +1,9 @@
 name: Menu
 version: 0.1
+api-version: 1.13
 main: com.snow.menu.P
 authors: [Sn0wStorm]
-softdepend: [XServer, Vault]
+softdepend: [XServer]
 commands:
   menu:
     description: Command for Administration

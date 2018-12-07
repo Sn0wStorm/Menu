@@ -11,7 +11,7 @@ import com.snow.menu.MenuView;
 
 public class BBack extends StatedButton implements ImmovableButton {
 	public BBack() {
-		super(Material.BIRCH_WOOD_STAIRS, "Zurück");
+		super(Material.BIRCH_STAIRS, "Zurück");
 		setState(0, new BEmptyTopTile().getItem());
 	}
 

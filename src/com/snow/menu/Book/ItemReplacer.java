@@ -14,10 +14,9 @@ public class ItemReplacer {
 	// Used by the EditableBookText
 	// Puts an item into the hand of a player and later reverts it back to the one there was before
 
-	private static Map<String, ItemReplacer> replacedItems = new HashMap<String, ItemReplacer>(); // Player Name and replacer
+	private static Map<String, ItemReplacer> replacedItems = new HashMap<>(); // Player Name and replacer
 
 	private ItemStack replaced;
-	private int slot;
 	private EditableBookText book;
 	public boolean hasOpened;
 	//private BukkitTask warn;
@@ -26,7 +25,6 @@ public class ItemReplacer {
 
 	public ItemReplacer(ItemStack replaceWith, Player player, EditableBookText book) {
 		this.book = book;
-		slot = player.getInventory().getHeldItemSlot();
 		if (replacedItems.containsKey(player.getName())) {
 			revertPlayer(player);
 		}
@@ -36,9 +34,8 @@ public class ItemReplacer {
 	}
 
 	private void replace(Player player, ItemStack replaceWith) {
-		replaced = player.getItemInHand();
-		player.setItemInHand(replaceWith);
-
+		replaced = player.getInventory().getItemInMainHand();
+		player.getInventory().setItemInMainHand(replaceWith);
 		player.updateInventory();
 	}
 
@@ -50,14 +47,11 @@ public class ItemReplacer {
 			}
 		}, 30)*/
 
-		timeout = P.p.getServer().getScheduler().runTaskLater(P.p, new Runnable() {
-			@Override
-			public void run() {
-				if (!hasOpened) {
-					revert(player, true);
-					if (book != null) {
-						book.wasRemoved(player, false);
-					}
+		timeout = P.p.getServer().getScheduler().runTaskLater(P.p, () -> {
+			if (!hasOpened) {
+				revert(player, true);
+				if (book != null) {
+					book.wasRemoved(player, false);
 				}
 			}
 		}, 80);
@@ -68,7 +62,7 @@ public class ItemReplacer {
 		hasOpened = true;
 		timeout.cancel();
 		if (player.isOnline()) {
-			player.getInventory().setItem(slot, replaced);
+			player.getInventory().setItemInMainHand(replaced);
 
 			player.updateInventory();
 		}

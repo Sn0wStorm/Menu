@@ -14,7 +14,7 @@ import com.snow.menu.P;
 public class BNextPage extends Button {
 
 	public BNextPage(PagedMenuHandler pages) {
-		super(Material.BANNER, (short) 15, "Nächste Seite");
+		super(Material.WHITE_BANNER, "Nächste Seite");
 		setAmount(pages.getPageIndex() + 2);
 		setLoreLine(0, "Seite " + (pages.getPageIndex() + 1) + "/" + pages.getNumPages());
 	}

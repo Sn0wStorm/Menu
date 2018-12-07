@@ -23,7 +23,7 @@ public class MEditTest extends MEdit {
 		GlobalEditableButton b = new GlobalEditableButton(Material.PACKED_ICE, "ZLAT", "Na da bin ich mal gespannt");
 		b.getEditHandler().initFromLore();
 		addButton(b, 1, 0);
-		addButton(new GlobalButton(Material.YELLOW_FLOWER, "Die Gelbe", "", "Und die bleibt wie sie ist!"), 1, 3);
+		addButton(new GlobalButton(Material.DANDELION, "Die Gelbe", "", "Und die bleibt wie sie ist!"), 1, 3);
 		return this;
 	}
 }

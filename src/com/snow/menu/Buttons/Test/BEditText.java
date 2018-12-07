@@ -17,7 +17,7 @@ import com.snow.menu.P;
 public class BEditText extends GlobalEditableButton {
 
 	public BEditText(String name) {
-		super(Material.POTATO_ITEM, name);
+		super(Material.BAKED_POTATO, name);
 
 		getEditHandler().nameEditable = false;
 		List<String> text = new ArrayList<String>(6);

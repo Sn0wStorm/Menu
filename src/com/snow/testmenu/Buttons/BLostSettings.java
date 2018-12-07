@@ -13,7 +13,7 @@ public class BLostSettings extends Button {
 	public static Menu settingsMenu;
 
 	public BLostSettings() {
-		super(Material.REDSTONE_COMPARATOR, "Einstellungen");
+		super(Material.COMPARATOR, "Einstellungen");
 	}
 
 	@Override
