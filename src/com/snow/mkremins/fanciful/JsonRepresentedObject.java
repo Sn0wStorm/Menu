@@ -1,15 +1,11 @@
 package com.snow.mkremins.fanciful;
 
-import java.io.IOException;
-
 import com.google.gson.stream.JsonWriter;
+
+import java.io.IOException;
 
 /**
  * Represents an object that can be serialized to a JSON writer instance.
- *
- * From fancyful: Lightweight library offering pleasant chat message formatting for Bukkit plugins.
- * A way to get at the good stuff offered by Minecraft 1.7's new chat protocol without dropping down to raw JSON.
- * https://github.com/mkremins/fanciful
  */
 interface JsonRepresentedObject {
 
