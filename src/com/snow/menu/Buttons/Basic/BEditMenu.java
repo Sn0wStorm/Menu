@@ -51,7 +51,7 @@ public class BEditMenu extends OnOffButton implements ImmovableButton {
 	}
 
 	@Override
-	public void click(InventoryClickEvent event, MenuView view) {
+	public void onClick(InventoryClickEvent event, MenuView view) {
 		if (view.getMenu() instanceof MEdit) {
 			MEdit menu = ((MEdit) view.getMenu());
 			menu.setEditing(event.getWhoClicked().getUniqueId(), !menu.isEditing(event.getWhoClicked().getUniqueId()));

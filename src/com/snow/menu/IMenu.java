@@ -72,22 +72,22 @@ public interface IMenu extends Iterable<Button> {
 	void clickOnSlot(InventoryClickEvent event, MenuView view);
 
 	// The Player clicked outside the menu inventory, or in the player inv
-	void clickOnPlayerInv(InventoryClickEvent event, MenuView view);
+	void onClickOnPlayerInv(InventoryClickEvent event, MenuView view);
 
 	// The Player clicked an emply slot inside the menu inventory
-	void clickOnEmptySlot(InventoryClickEvent event, MenuView view);
+	void onClickOnEmptySlot(InventoryClickEvent event, MenuView view);
 
 	// The Menu will open for the Player, The old Menu (if any) is still open
 	// Do any changes/updates to Buttons here
 	// Return false if the Menu should not be opened
-	boolean willOpenMenu(Player player);
+	boolean onPrepareOpeningMenu(Player player);
 
 	// The Menu is opened for a player, or opened again
 	// fresh is true if the menu was just created and not just opened again
-	void openingMenu(Player player, MenuView view, boolean fresh, MenuView old);
+	void onOpeningMenu(Player player, MenuView view, boolean fresh, MenuView old);
 
 	// The Player closes the Menu, it is being force closed, or another Menu opens
-	void closingMenu(Player player, MenuView view, MenuView target);
+	void onClosingMenu(Player player, MenuView view, MenuView target);
 
 	// If the Player can admin the Menu,
 	// Determines if the player can do certain actions like editing an EditableMenu.

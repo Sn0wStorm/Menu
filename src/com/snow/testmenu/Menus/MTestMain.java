@@ -1,15 +1,12 @@
 package com.snow.testmenu.Menus;
 
 import com.snow.menu.Buttons.Button;
-import com.snow.menu.Buttons.IButton;
-import com.snow.menu.IMenu;
-import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 
 import com.snow.menu.Buttons.Basic.BEmptyTile;
-import com.snow.testmenu.Buttons.BLostSettings;
+import com.snow.testmenu.Buttons.BTestSettings;
 import com.snow.menu.Buttons.SubMenu.BShowMenu;
 import com.snow.menu.Buttons.Test.BBookText;
 import com.snow.menu.Buttons.Test.BTest;
@@ -21,13 +18,13 @@ import com.snow.menu.Menus.Attributes.EditableMenuHandler;
 import com.snow.menu.Menus.Test.MEditTest;
 import com.snow.menu.P;
 
-public class MLostMain extends Menu implements EditableMenu {
+public class MTestMain extends Menu implements EditableMenu {
 
 	private EditableMenuHandler edit;
 	public BShowMenu editTest;
 	//private SaveableMenuHandler save;
 
-	public MLostMain() {
+	public MTestMain() {
 		super("Hauptmenü", 6);
 		edit = new EditableMenuHandler(this);
 		//save = new SaveableMenuHandler(this);
@@ -36,7 +33,7 @@ public class MLostMain extends Menu implements EditableMenu {
 		showBasicButtons(true);
 		addButton(new BTest(Material.BLAZE_POWDER, "Heyho test"), 1, 3);
 		//addButton(new BEditText("§6PiPaPotato"), 2, 6);
-		addButton(new BLostSettings(), 3, 4);
+		addButton(new BTestSettings(), 3, 4);
 		addButton(new BMenuBook(), 3, 0);
 		addButton(new BTestItemSelect(Material.EMERALD_ORE), 3, 5);
 		editTest = new BShowMenu(Material.DIAMOND_AXE, "Bearbeitungs Test", "ZLAT");
@@ -51,15 +48,15 @@ public class MLostMain extends Menu implements EditableMenu {
 		}, 10);
 		addButton(new BEmptyTile(), 4, 8);
 		addButton(new BBookText(Material.BOOK, "Ein Menüdialog im Buch"), 4, 6);
-		Menu m = P.p.getRegistry().getMenu(new NamespacedKey("lostisle", "shoplist"));
-		Button is = P.p.getRegistry().getButton(new NamespacedKey("lostisle", "insel"));
+		Menu m = P.p.getPluginRegistry().getMenu(new NamespacedKey("lostisle", "shoplist"));
+		Button is = P.p.getPluginRegistry().getButton(new NamespacedKey("lostisle", "insel"));
 		if (is != null) {
 			addButton(is, 1, 4);
 		}
 		if (m != null) {
 			addButton(new BShowMenu(Material.DIAMOND, "Shopliste").setMenuToShow(m), 1, 5);
 		}
-		BLostSettings.init();
+		BTestSettings.init();
 	}
 
 	@Override
@@ -78,7 +75,7 @@ public class MLostMain extends Menu implements EditableMenu {
 	}
 
 	@Override
-	public void load() {
+	public void onLoad() {
 
 	}*/
 

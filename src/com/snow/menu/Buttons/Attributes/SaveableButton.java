@@ -8,5 +8,5 @@ public interface SaveableButton extends IButton {
 	void setSaveHandler(SaveableButtonHandler save);
 
 	// Called when the Button was loaded
-	void load();
+	void onLoad();
 }

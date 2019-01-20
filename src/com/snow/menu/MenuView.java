@@ -1,13 +1,11 @@
 package com.snow.menu;
 
-import com.snow.menu.Menus.Attributes.PagedMenu;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.InventoryView;
 
 import com.snow.menu.Buttons.Button;
-import com.snow.menu.Menus.Attributes.NoBackMenu;
 
   /*
     The open Menu of a single player
@@ -71,11 +69,11 @@ public class MenuView implements InventoryHolder {
 	public void showAgain(Player player, MenuView old) {
 		if (old != null) {
 			MenuListener.storeClosing(player.getUniqueId(), old);
-			old.getMenu().closingMenu(player, old, this);
+			old.getMenu().onClosingMenu(player, old, this);
 			old.closed();
 		}
 		menu.listOpenView(this);
-		menu.openingMenu(player, this, false, old);
+		menu.onOpeningMenu(player, this, false, old);
 		player.openInventory(inv);
 	}
 

@@ -32,7 +32,7 @@ public class BTestItemSelect extends Button {
 	}
 
 	@Override
-	public void click(InventoryClickEvent event, MenuView view) {
+	public void onClick(InventoryClickEvent event, MenuView view) {
 		MItemSelect.allItems.show((Player) event.getWhoClicked(), new Selector() {
 			@Override
 			public void selected(UUID player, Button button) {

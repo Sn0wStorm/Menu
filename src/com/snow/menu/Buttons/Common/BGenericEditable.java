@@ -39,7 +39,7 @@ public class BGenericEditable extends Button implements EditableButton {
 	}
 
 	@Override
-	public void click(InventoryClickEvent event, MenuView view) {
+	public void onClick(InventoryClickEvent event, MenuView view) {
 		if (event.getClick().equals(ClickType.RIGHT) || event.getClick().equals(ClickType.SHIFT_RIGHT)) {
 			editHandler.edit((Player) event.getWhoClicked(), view);
 		}

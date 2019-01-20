@@ -44,7 +44,7 @@ public class BShowMenu extends Button {
 	}
 
 	@Override
-	public void click(InventoryClickEvent event, MenuView view) {
+	public void onClick(InventoryClickEvent event, MenuView view) {
 		if (menuToShow != null) {
 			menuToShow.show(((Player) event.getWhoClicked()));
 		}

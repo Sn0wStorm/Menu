@@ -42,18 +42,18 @@ public interface IButton {
 
 	// Button was clicked by a Player
 	// The Event is already cancelled and can be checked for clicktype etc.
-	void click(InventoryClickEvent event, MenuView view);
+	void onClick(InventoryClickEvent event, MenuView view);
 
 	// Button was clicked by a Player, but he is not allowed to (canclick returned false)
 	// The Event is already cancelled and can be checked for clicktype etc.
-	void clickNotAllowed(InventoryClickEvent event, MenuView view);
+	void onClickNotAllowed(InventoryClickEvent event, MenuView view);
 
 	// Should return false if the Button should not be shown for the Player
 	// Permission checks, etc can be done here
 	boolean canSee(Player player, MenuView view);
 
 	// Should return false if the Button can not be clicked by the Player
-	// Will call the method clickNotAllowed instead of click when clicked
+	// Will call the method onClickNotAllowed instead of onClick when clicked
 	boolean canClick(Player player, MenuView view);
 
 	// Returns the Delay that should be between clicks in miliseconds
@@ -68,10 +68,10 @@ public interface IButton {
 	ItemStack getItem(Player player, MenuView view);
 
 	// Called when the Button is removed from a Menu
-	void removing();
+	void onRemoving();
 
 	// Called when the Button is being added to a Menu
-	void adding(Menu menu, int slot);
+	void onAdding(Menu menu, int slot);
 
 	// Update this Button in a view for a player
 	void update(MenuView view, Player player);

@@ -43,7 +43,7 @@ public interface EditableButton extends IButton {
 	  Example Method to open the Editing Menu on double rightclick:
 
 	  @Override
-	  public void click(InventoryClickEvent event, MenuView view) {
+	  public void onClick(InventoryClickEvent event, MenuView view) {
 	    if (event.getClick().equals(ClickType.RIGHT) || event.getClick().equals(ClickType.SHIFT_RIGHT)) {
 			getEditHandler().edit((Player) event.getWhoClicked(), view);
 	    }

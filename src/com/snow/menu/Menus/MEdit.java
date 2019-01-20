@@ -49,7 +49,7 @@ public class MEdit extends Menu implements EditableMenu, SaveableMenu {
 	}
 
 	@Override
-	public void load() {
+	public void onLoad() {
 	}
 
 	public void setEditing(UUID uuid, boolean editing) {
@@ -91,40 +91,40 @@ public class MEdit extends Menu implements EditableMenu, SaveableMenu {
 	}
 
 	@Override
-	public void clickOnPlayerInv(InventoryClickEvent event, MenuView view) {
+	public void onClickOnPlayerInv(InventoryClickEvent event, MenuView view) {
 		if (editing.contains(event.getWhoClicked().getUniqueId())) {
 			edit.clickOnPlayerInv(event, view);
 		} else {
-			super.clickOnPlayerInv(event, view);
+			super.onClickOnPlayerInv(event, view);
 		}
 	}
 
 	@Override
-	public void clickOnEmptySlot(InventoryClickEvent event, MenuView view) {
+	public void onClickOnEmptySlot(InventoryClickEvent event, MenuView view) {
 		if (editing.contains(event.getWhoClicked().getUniqueId())) {
 			edit.clickOnEmptySlot(event, view);
 		} else {
-			super.clickOnEmptySlot(event, view);
+			super.onClickOnEmptySlot(event, view);
 		}
 	}
 
 	@Override
-	public void closingMenu(Player player, MenuView view, MenuView target) {
+	public void onClosingMenu(Player player, MenuView view, MenuView target) {
 		if (editing.contains(player.getUniqueId())) {
 			edit.closingMenu(player, view);
 			if (target == null || (view != target && !(target.getMenu() instanceof MItemSelect))) {
 				setEditing(player.getUniqueId(), false);
 			}
 		} else {
-			super.closingMenu(player, view, target);
+			super.onClosingMenu(player, view, target);
 		}
 	}
 
 	@Override
-	public void openingMenu(Player player, MenuView view, boolean fresh, MenuView old) {
+	public void onOpeningMenu(Player player, MenuView view, boolean fresh, MenuView old) {
 		if (!fresh && old != null && old.getMenu() instanceof MItemSelect) {
 			view.update(player);
 		}
-		super.openingMenu(player, view, fresh, old);
+		super.onOpeningMenu(player, view, fresh, old);
 	}
 }

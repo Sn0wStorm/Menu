@@ -59,8 +59,8 @@ public class MItemSelect extends ListMenu<ItemStack> implements NoBackMenu, Sele
 	}
 
 	/*@Override
-	public void closingMenu(Player player, MenuView view, MenuView target) {
-		super.closingMenu(player, view, target);
+	public void onClosingMenu(Player player, MenuView view, MenuView target) {
+		super.onClosingMenu(player, view, target);
 		if (target == null || !(target.getMenu() instanceof MItemSelect)) {
 			removeSelector(player.getUniqueId());
 			PagedMenuHandler.clearCache(player);

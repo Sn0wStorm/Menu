@@ -22,7 +22,7 @@ public class BBookText extends Button {
 
 
 	@Override
-	public void click(InventoryClickEvent event, MenuView view) {
+	public void onClick(InventoryClickEvent event, MenuView view) {
 		if (msg == null) {
 			msg = new FancyMessage("Dies ist hoffentlich ein gutes Beispiel für einen Menü Dialog\n\n");
 			msg.color(ChatColor.RED);
@@ -34,7 +34,7 @@ public class BBookText extends Button {
 
 			BookButton byes = new BookButton(event.getWhoClicked().getUniqueId(), text) {
 				@Override
-				public boolean click(Player player) {
+				public boolean onClick(Player player) {
 					player.sendTitle("§aVerstanden", "Du hast verstanden");
 					return false;
 				}
@@ -42,7 +42,7 @@ public class BBookText extends Button {
 
 			BookButton bno = new BookButton(event.getWhoClicked().getUniqueId(), text) {
 				@Override
-				public boolean click(Player player) {
+				public boolean onClick(Player player) {
 					player.sendTitle("§4Nicht verstasnden", "Du hast nicht verstanden");
 					return true;
 				}

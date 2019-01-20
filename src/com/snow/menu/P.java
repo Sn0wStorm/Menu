@@ -9,7 +9,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import org.apache.commons.lang.math.NumberUtils;
 
-import com.snow.testmenu.Menus.MLostMain;
+import com.snow.testmenu.Menus.MTestMain;
 import com.snow.menu.Book.BookButton;
 import com.snow.menu.Book.BookListener;
 import com.snow.menu.Book.ClickListener;
@@ -26,7 +26,7 @@ public class P extends JavaPlugin {
 	public MenuListener menuListener;
 	public BookListener bookListener;
 
-	public MLostMain mainMenu;
+	public MTestMain testMain;
 	//public int id = 0;
 
 	private PluginRegistry registry = new PluginRegistry();
@@ -83,7 +83,7 @@ public class P extends JavaPlugin {
 		this.log(this.getDescription().getName() + " disabled!");
 	}
 
-	public PluginRegistry getRegistry() {
+	public PluginRegistry getPluginRegistry() {
 		return registry;
 	}
 
@@ -119,7 +119,7 @@ public class P extends JavaPlugin {
 	}
 
 	public void initBaseMenus() {
-		mainMenu = new MLostMain();
+		testMain = new MTestMain();
 		MItemSelect.allItems = new MItemSelect();
 	}
 

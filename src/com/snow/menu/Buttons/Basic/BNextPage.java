@@ -34,7 +34,7 @@ public class BNextPage extends Button {
 	}
 
 	@Override
-	public void click(InventoryClickEvent event, MenuView view) {
+	public void onClick(InventoryClickEvent event, MenuView view) {
 		if (view.getMenu() instanceof PagedMenu) {
 			PagedMenuHandler pages = ((PagedMenu) view.getMenu()).getMenuPages();
 			if (pages.hasNext()) {

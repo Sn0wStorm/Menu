@@ -187,9 +187,9 @@ public class EditableMenuHandler implements Selector {
 		if (button == null) return;
 		if (button instanceof BEditMenu) {
 			if (button.canClick(((Player) event.getWhoClicked()), view)) {
-				button.click(event, view);
+				button.onClick(event, view);
 			} else {
-				button.clickNotAllowed(event, view);
+				button.onClickNotAllowed(event, view);
 			}
 			return;
 		}

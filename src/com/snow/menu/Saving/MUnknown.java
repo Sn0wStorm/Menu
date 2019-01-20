@@ -26,6 +26,6 @@ public class MUnknown extends Menu implements SaveableMenu {
 	}
 
 	@Override
-	public void load() {
+	public void onLoad() {
 	}
 }

@@ -78,7 +78,7 @@ public class GlobalEditableButton extends GlobalButton implements EditableButton
 	// Allows editing on Double Rightclick if canEdit() returns true
 	// Can be overridden to add more advanced editing etc.
 	@Override
-	public void click(InventoryClickEvent event, MenuView view) {
+	public void onClick(InventoryClickEvent event, MenuView view) {
 		if (canEdit(((Player) event.getWhoClicked())) && (event.getClick().equals(ClickType.RIGHT) || event.getClick().equals(ClickType.SHIFT_RIGHT))) {
 			edit.edit((Player) event.getWhoClicked(), view);
 		}

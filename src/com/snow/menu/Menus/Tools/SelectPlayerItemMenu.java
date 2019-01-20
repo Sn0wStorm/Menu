@@ -12,6 +12,13 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 
+
+/*
+  An Empty Menu that tells the Player to select one item out of his own inventory
+  The Item will stay there and not be touched.
+  The Selected Items Type is given to the Registered Selector as Button
+ */
+
 public class SelectPlayerItemMenu extends Menu implements SelectorMenu {
 
 	public SelectPlayerItemMenu() {
@@ -43,8 +50,8 @@ public class SelectPlayerItemMenu extends Menu implements SelectorMenu {
 	}
 
 	@Override
-	public void clickOnPlayerInv(InventoryClickEvent event, MenuView view) {
-		super.clickOnPlayerInv(event, view);
+	public void onClickOnPlayerInv(InventoryClickEvent event, MenuView view) {
+		super.onClickOnPlayerInv(event, view);
 		if (event.getSlotType() != InventoryType.SlotType.OUTSIDE) {
 			if (event.isLeftClick()) {
 				ItemStack currentItem = event.getCurrentItem();
@@ -56,8 +63,8 @@ public class SelectPlayerItemMenu extends Menu implements SelectorMenu {
 	}
 
 	@Override
-	public void closingMenu(Player player, MenuView view, MenuView target) {
-		super.closingMenu(player, view, target);
+	public void onClosingMenu(Player player, MenuView view, MenuView target) {
+		super.onClosingMenu(player, view, target);
 		SelectorMenu.removeSelector(player.getUniqueId());
 	}
 }

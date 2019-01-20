@@ -18,7 +18,7 @@ import java.util.stream.Stream;
 /*
   A Menu with Pages that is fully integrated as Menu.
   Adding and removing Buttons will create and remove Pages if needed
-  Most operations are modified to work on all pages
+  Most operations on the First Page are modified to work across on all pages
  */
 
 public class FullyPagedMenu extends Menu implements PagedMenu {
@@ -269,11 +269,11 @@ public class FullyPagedMenu extends Menu implements PagedMenu {
 		super.updateSlot(slot);
 	}
 
-	// When Overriding this, call super.willOpenMenu(player)
+	// When Overriding this, call super.onPrepareOpeningMenu(player)
 	// to update the Next/Prev Page Buttons
 	@Override
-	public boolean willOpenMenu(Player player) {
-		if (super.willOpenMenu(player)) {
+	public boolean onPrepareOpeningMenu(Player player) {
+		if (super.onPrepareOpeningMenu(player)) {
 			if (getMenuPages() == null) {
 				throw new IllegalStateException("Paged Menu is not initialized");
 			}
@@ -282,7 +282,7 @@ public class FullyPagedMenu extends Menu implements PagedMenu {
 			if (b instanceof BNextPage) {
 				b.setLoreLine(0, "Seite " + (getMenuPages().getPageIndex() + 1) + "/" + getMenuPages().getNumPages());
 			}
-			b = getButton(BNextPage.getDefaultRow(), BNextPage.getDefaultColumn());
+			b = getButton(BPrevPage.getDefaultRow(), BPrevPage.getDefaultColumn());
 			if (b instanceof BPrevPage) {
 				b.setLoreLine(0, "Seite " + (getMenuPages().getPageIndex() + 1) + "/" + getMenuPages().getNumPages());
 			}
@@ -291,17 +291,17 @@ public class FullyPagedMenu extends Menu implements PagedMenu {
 	}
 
 	@Override
-	@OverridingMethodsMustInvokeSuper // Call super.openingMenu when overriding this
-	public void openingMenu(Player player, MenuView view, boolean fresh, MenuView old) {
-		super.openingMenu(player, view, fresh, old);
+	@OverridingMethodsMustInvokeSuper // Call super.onOpeningMenu when overriding this
+	public void onOpeningMenu(Player player, MenuView view, boolean fresh, MenuView old) {
+		super.onOpeningMenu(player, view, fresh, old);
 		if (fresh) {
 			PagedMenuHandler.cache(player.getUniqueId(), view);
 		}
 	}
 
 	@Override
-	@OverridingMethodsMustInvokeSuper // Call super.closingMenu when overriding this
-	public void closingMenu(Player player, MenuView view, MenuView target) {
+	@OverridingMethodsMustInvokeSuper // Call super.onClosingMenu when overriding this
+	public void onClosingMenu(Player player, MenuView view, MenuView target) {
 		PagedMenu.close(player, view, target);
 	}
 }

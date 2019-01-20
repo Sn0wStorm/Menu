@@ -133,6 +133,6 @@ public class SaveableButtonHandler {
 	}
 
 	public void loadDone() {
-		getButton().load();
+		getButton().onLoad();
 	}
 }

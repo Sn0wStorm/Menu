@@ -33,7 +33,7 @@ public class BItemSelect extends Button {
 	}
 
 	@Override
-	public void click(InventoryClickEvent event, MenuView view) {
+	public void onClick(InventoryClickEvent event, MenuView view) {
 		Player player = ((Player) event.getWhoClicked());
 		Selector s = selectors.get(player.getUniqueId());
 		if (s != null) {

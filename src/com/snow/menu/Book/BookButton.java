@@ -23,7 +23,7 @@ public abstract class BookButton {
 	}
 
 	// Will create the FancyMessage that can be used in a BookText
-	// Clicking this text will run the click(player) method
+	// Clicking this text will run the onClick(player) method
 	// color == null makes it blue, tooltip == null no tooltip
 	public FancyMessage create(String text, boolean underlined, ChatColor color, String... tooltip) {
 		FancyMessage msg = new FancyMessage(text);
@@ -73,5 +73,5 @@ public abstract class BookButton {
 	// Should return whether to reopen the book or not
 	// If returns true, the Buttons will not be removed from the listener
 	// If return false, all Buttons for the Player will be removed from the listener
-	public abstract boolean click(Player player);
+	public abstract boolean onClick(Player player);
 }

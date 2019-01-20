@@ -13,6 +13,8 @@ public class PluginRegistry {
 	private Map<NamespacedKey, Supplier<Button>> buttons = new HashMap<>();
 	private Map<NamespacedKey, Menu> menus = new HashMap<>();
 
+	private Menu mainMenu;
+
 
 	public void registerButton(Plugin plugin, String name, Supplier<Button> button) {
 		registerButton(new NamespacedKey(plugin, name), button);
@@ -47,4 +49,11 @@ public class PluginRegistry {
 		return menus.get(key);
 	}
 
+	public Menu getMainMenu() {
+		return mainMenu;
+	}
+
+	public void setMainMenu(Menu mainMenu) {
+		this.mainMenu = mainMenu;
+	}
 }

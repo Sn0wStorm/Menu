@@ -15,21 +15,12 @@ public interface PagedMenu extends IMenu {
 	/*
 	  ############   IMPORTANT!!!:   #################
 
-	  Override closingMenu() and inside call the static close(-) method seen below
-
-	  Or implement it yourself:
-
-	  Implementing Class needs to call:
-	  if (target == null || !(target.getMenu() instanceof MItemSelect)) {
-			PagedMenuHandler.clearCache(player);
-	  }
-	  in:
-	  closingMenu();
-	  Replace MItemSelect with the implementing Classes Type
+	  Override onClosingMenu() and inside call the static close(-) method seen below
+	  (already implemented in FullyPagedMenu)
 	 */
 
 	@Override
-	void closingMenu(Player player, MenuView view, MenuView target);
+	void onClosingMenu(Player player, MenuView view, MenuView target);
 
 	static void close(Player player, MenuView view, MenuView target) {
 		if (target == null) {

@@ -66,7 +66,7 @@ public class PlayerSettingButton extends OnOffButton {
 	}
 
 	@Override
-	public void click(InventoryClickEvent event, MenuView view) {
+	public void onClick(InventoryClickEvent event, MenuView view) {
 		Player p = (Player) event.getWhoClicked();
 		AtomicBoolean b = settings.get(p.getUniqueId());
 		if (b != null) {

@@ -8,5 +8,5 @@ public interface SaveableMenu extends IMenu {
 	//void setSaveHandler(SaveableMenuHandler handler);
 
 	// Method that gets called when the menu was initialized and loaded
-	void load();
+	void onLoad();
 }

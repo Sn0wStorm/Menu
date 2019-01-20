@@ -3,6 +3,7 @@ package com.snow.menu.Buttons.Tools;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.snow.menu.Menu;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -22,9 +23,17 @@ public class BMenuBook extends Button {
 				"", "§8Klick um ein Menü Buch zu erhalten");
 	}
 
+	public BMenuBook(String name, String... lore) {
+		super(Material.BOOK, name, lore);
+	}
+
 	@Override
-	public void click(InventoryClickEvent event, MenuView view) {
+	public void onClick(InventoryClickEvent event, MenuView view) {
 		Player player = (Player) event.getWhoClicked();
+		if (!player.hasPermission("menu.getbook")) {
+			P.p.msg(player, "&cDu hast keine Rechte dazu");
+			return;
+		}
 
 		for (ItemStack item : player.getInventory().getContents()) {
 			if (item == null) continue;

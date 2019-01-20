@@ -1,6 +1,7 @@
 package com.snow.menu.Buttons.Basic;
 
 
+import com.snow.menu.Menu;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -26,13 +27,15 @@ public class BHome extends Button implements ImmovableButton {
 	}
 
 	@Override
-	public void click(InventoryClickEvent event, MenuView view) {
-		if (P.p.mainMenu == view.getMenu()) return;
+	public void onClick(InventoryClickEvent event, MenuView view) {
+		Menu main = P.p.getPluginRegistry().getMainMenu();
 		if (!event.getWhoClicked().hasPermission("menu.home")) return;
 		if (view.getHomeMenu() != null) {
-			view.getHomeMenu().showAgain((Player) event.getWhoClicked(), view);
-		} else {
-			P.p.mainMenu.show((Player) event.getWhoClicked());
+			if (view.getHomeMenu() != view) {
+				view.getHomeMenu().showAgain((Player) event.getWhoClicked(), view);
+			}
+		} else if (main != null && main != view.getMenu()) {
+			main.show((Player) event.getWhoClicked());
 		}
 	}
 

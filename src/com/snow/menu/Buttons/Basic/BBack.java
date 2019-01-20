@@ -19,7 +19,7 @@ public class BBack extends MultiStateButton implements ImmovableButton {
 	}
 
 	@Override
-	public void click(InventoryClickEvent event, MenuView view) {
+	public void onClick(InventoryClickEvent event, MenuView view) {
 		if (view.getBackMenu() != null) {
 			view.getBackMenu().showAgain((Player) event.getWhoClicked(), view);
 		}

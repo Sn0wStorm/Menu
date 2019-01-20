@@ -125,7 +125,7 @@ public class Menu implements IMenu {
 		while (slot < buttons.length) {
 			if (buttons[slot] == null) {
 				buttons[slot] = button;
-				button.adding(this, slot);
+				button.onAdding(this, slot);
 				return true;
 			}
 			slot++;
@@ -172,7 +172,7 @@ public class Menu implements IMenu {
 		}
 
 		buttons[slot] = button;
-		button.adding(this, slot);
+		button.onAdding(this, slot);
 		//updateSlot(slot);
 
 		return true;
@@ -224,7 +224,7 @@ public class Menu implements IMenu {
 	public Button removeButton(int slot) {
 		Button button = buttons[slot];
 		if (button != null) {
-			button.removing();
+			button.onRemoving();
 			buttons[slot] = null;
 			//updateSlot(slot);
 		}
@@ -242,7 +242,7 @@ public class Menu implements IMenu {
 				continue;
 			}
 			if (buttons[i].equals(button)) {
-				button.removing();
+				button.onRemoving();
 				buttons[i] = null;
 				return true;
 			}
@@ -285,7 +285,7 @@ public class Menu implements IMenu {
 			return null;
 		}
 
-		if (!willOpenMenu(player)) {
+		if (!onPrepareOpeningMenu(player)) {
 			return null;
 		}
 
@@ -302,13 +302,13 @@ public class Menu implements IMenu {
 		if (old != null) {
 			view.setBackMenu(old);
 			MenuListener.storeClosing(player.getUniqueId(), old);
-			old.getMenu().closingMenu(player, old, view);
+			old.getMenu().onClosingMenu(player, old, view);
 			old.closed();
 		}
 
 		updateButtons(inv, view, player, true);
 
-		openingMenu(player, view, true, old);
+		onOpeningMenu(player, view, true, old);
 
 		listOpenView(view);
 		player.openInventory(inv);
@@ -330,15 +330,15 @@ public class Menu implements IMenu {
 			return;
 		}
 		if (buttons[slot].canClick(player, view)) {
-			buttons[slot].click(event, view);
+			buttons[slot].onClick(event, view);
 		} else {
-			buttons[slot].clickNotAllowed(event, view);
+			buttons[slot].onClickNotAllowed(event, view);
 		}
 	}
 
 	// The Player clicked outside the menu inventory, or in the player inv
 	@Override
-	public void clickOnPlayerInv(InventoryClickEvent event, MenuView view) {
+	public void onClickOnPlayerInv(InventoryClickEvent event, MenuView view) {
 		if (showBasic) {
 			if (event.getSlotType().equals(InventoryType.SlotType.OUTSIDE)) {
 				if (view.getBackMenu() != null) {
@@ -350,14 +350,14 @@ public class Menu implements IMenu {
 
 	// The Player clicked an empty slot inside the menu inventory
 	@Override
-	public void clickOnEmptySlot(InventoryClickEvent event, MenuView view) {
+	public void onClickOnEmptySlot(InventoryClickEvent event, MenuView view) {
 	}
 
 	// The Menu will open for the Player, The old Menu (if any) is still open
 	// Do any changes/updates to Buttons here
 	// Return false if the Menu should not be opened
 	@Override
-	public boolean willOpenMenu(Player player) {
+	public boolean onPrepareOpeningMenu(Player player) {
 		return true;
 	}
 
@@ -367,13 +367,13 @@ public class Menu implements IMenu {
 	// The MenuView the player is coming from is given with old
 	// The old MenuView may be null if the player was not in a menu before
 	@Override
-	public void openingMenu(Player player, MenuView view, boolean fresh, MenuView old) {
+	public void onOpeningMenu(Player player, MenuView view, boolean fresh, MenuView old) {
 	}
 
 	// The Player closes the Menu, it is being force closed, or another Menu opens
 	// If the player opens another menu, the target is that new menu
 	@Override
-	public void closingMenu(Player player, MenuView view, MenuView target) {
+	public void onClosingMenu(Player player, MenuView view, MenuView target) {
 	}
 
 	// If the Player can admin the Menu,

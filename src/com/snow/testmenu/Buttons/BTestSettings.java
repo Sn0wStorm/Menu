@@ -8,16 +8,16 @@ import com.snow.menu.Buttons.Button;
 import com.snow.menu.Menu;
 import com.snow.menu.MenuView;
 
-public class BLostSettings extends Button {
+public class BTestSettings extends Button {
 
 	public static Menu settingsMenu;
 
-	public BLostSettings() {
+	public BTestSettings() {
 		super(Material.COMPARATOR, "Einstellungen");
 	}
 
 	@Override
-	public void click(InventoryClickEvent event, MenuView view) {
+	public void onClick(InventoryClickEvent event, MenuView view) {
 		settingsMenu.show((Player) event.getWhoClicked());
 	}
 

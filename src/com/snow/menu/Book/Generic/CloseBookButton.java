@@ -10,7 +10,7 @@ public class CloseBookButton extends BookButton {
 	}
 
 	@Override
-	public boolean click(Player player) {
+	public boolean onClick(Player player) {
 		return false;
 	}
 

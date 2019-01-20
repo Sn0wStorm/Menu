@@ -15,8 +15,8 @@ public class MEditTest extends MEdit {
 	}
 
 	@Override
-	public void load() {
-		P.p.mainMenu.editTest.setMenuToShow(this);
+	public void onLoad() {
+		P.p.testMain.editTest.setMenuToShow(this);
 	}
 
 	public MEditTest init() {

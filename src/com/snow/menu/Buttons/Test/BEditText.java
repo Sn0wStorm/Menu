@@ -34,7 +34,7 @@ public class BEditText extends GlobalEditableButton {
 	}
 
 	@Override
-	public void click(InventoryClickEvent event, MenuView view) {
+	public void onClick(InventoryClickEvent event, MenuView view) {
 		P.p.msg(event.getWhoClicked(), "Yesss edit me!");
 
 		if (event.getClick().equals(ClickType.RIGHT) || event.getClick().equals(ClickType.SHIFT_RIGHT)) {

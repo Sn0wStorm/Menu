@@ -89,7 +89,7 @@ public class Button implements IButton {
 
 	// Give the Button a Function in form of a Lambda Expression or Method Reference
 	// will be executed when the Button is clicked
-	// instead the click Method can be overridden
+	// instead the onClick Method can be overridden
 	// example:   setFunction((player, view) -> player.sendMessage("clicked a button"));
 	@Override
 	public Button setClickFunction(BiConsumer<Player, MenuView> function) {
@@ -142,14 +142,14 @@ public class Button implements IButton {
 	// event.getWhoClicked() is already checked for instanceof Player
 	// If not overridden, the function given with setClickFunction will be executed
 	@Override
-	public void click(InventoryClickEvent event, MenuView view) {
+	public void onClick(InventoryClickEvent event, MenuView view) {
 		if (function != null) function.accept(((Player) event.getWhoClicked()), view);
 	}
 
 	// Button was clicked by a Player, but he is not allowed to (canClick returned false)
 	// The Event is already cancelled and can be checked for clicktype etc.
 	@Override
-	public void clickNotAllowed(InventoryClickEvent event, MenuView view) {
+	public void onClickNotAllowed(InventoryClickEvent event, MenuView view) {
 	}
 
 	// Should return false if the Button should not be shown for the Player
@@ -161,7 +161,7 @@ public class Button implements IButton {
 	}
 
 	// Should return false if the Button can not be clicked by the Player
-	// Will call the method clickNotAllowed instead of click when clicked
+	// Will call the method onClickNotAllowed instead of onClick when clicked
 	@Override
 	public boolean canClick(Player player, MenuView view)  {
 		return true;
@@ -186,12 +186,12 @@ public class Button implements IButton {
 
 	// Called when the Button is removed from the Menu
 	@Override
-	public void removing() {
+	public void onRemoving() {
 	}
 
 	// Called when the Button is being added to a Menu
 	@Override
-	public void adding(Menu menu, int slot) {
+	public void onAdding(Menu menu, int slot) {
 		setCurrentMenu(menu, slot);
 	}
 

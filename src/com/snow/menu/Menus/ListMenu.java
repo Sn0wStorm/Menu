@@ -139,15 +139,15 @@ public class ListMenu<E> extends FullyPagedMenu {
 	}
 
 	@Override
-	public boolean willOpenMenu(Player player) {
-		if (getMenuPages() != null && !isHead()) return super.willOpenMenu(player);
+	public boolean onPrepareOpeningMenu(Player player) {
+		if (getMenuPages() != null && !isHead()) return super.onPrepareOpeningMenu(player);
 		long time = System.currentTimeMillis();
 		if (isShouldRebuild() || (isAutoUpdate() && time - lastUpdate > getUpdateInterval() * 1000)) {
 			setLastUpdate(time);
 			setShouldRebuild(false);
 			rebuildAll();
 		}
-		return super.willOpenMenu(player);
+		return super.onPrepareOpeningMenu(player);
 	}
 
 	public void rebuildAll() {

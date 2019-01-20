@@ -78,7 +78,7 @@ public class SaveableMenuHandler {
 	}
 
 	public void load_done() {
-		menu.load();
+		menu.onLoad();
 	}
 
 

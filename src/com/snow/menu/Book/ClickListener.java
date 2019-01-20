@@ -39,7 +39,7 @@ public class ClickListener implements CommandExecutor {
 				if (!args[0].equals("NoCommand")) {
 					BookButton button = buttons.get(args[0]);
 					if (button != null && button.getPlayer().equals(player.getUniqueId())) {
-						if (button.click(player)) {
+						if (button.onClick(player)) {
 							button.getText().displayTo(player);
 							return true;
 						}

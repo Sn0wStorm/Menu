@@ -48,7 +48,7 @@ public class GlobalButton extends Button implements SaveableButton {
 	}
 
 	@Override
-	public void load() {
+	public void onLoad() {
 	}
 
 	@Override
@@ -76,13 +76,13 @@ public class GlobalButton extends Button implements SaveableButton {
 	}
 
 	@Override
-	public void removing() {
+	public void onRemoving() {
 		buttons.remove(this);
 	}
 
 	@Override
-	public void adding(Menu menu, int slot) {
-		super.adding(menu, slot);
+	public void onAdding(Menu menu, int slot) {
+		super.onAdding(menu, slot);
 		buttons.add(this);
 	}
 

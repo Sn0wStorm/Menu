@@ -2,6 +2,7 @@ package com.snow.menu.Menus.Attributes;
 
 import com.snow.menu.Buttons.Tools.BItemSelect;
 import com.snow.menu.Buttons.Tools.Selector;
+import com.snow.menu.IMenu;
 import com.snow.menu.MenuView;
 import org.bukkit.entity.Player;
 
@@ -10,11 +11,11 @@ import java.util.UUID;
 
 /*
   A Menu where a Player has to select an item
-  When he clicks the item, the corresponding Method in the Selector
-  interface is called
+  When he clicks the item, the selected() Method in the registered
+  ...Buttons.Tools.Selector interface is called
  */
 
-public interface SelectorMenu {
+public interface SelectorMenu extends IMenu {
 
 	// Set a Selector, the selector could also be a lambda function
 	static void useSelector(UUID player, Selector selector) {
@@ -27,6 +28,7 @@ public interface SelectorMenu {
 	}
 
 	// Remove the registered Selector
+	// Should be called in the onClosingMenu Method
 	static void removeSelector(UUID player) {
 		BItemSelect.removeSelector(player);
 	}

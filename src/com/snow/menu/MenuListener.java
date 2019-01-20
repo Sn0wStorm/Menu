@@ -48,9 +48,9 @@ public class MenuListener implements Listener {
 		// Check if menu book was clicked
 		if (event.getClick().equals(ClickType.RIGHT)) {
 			if (event.getCurrentItem() != null) {
-				if (event.getWhoClicked() != null && event.getWhoClicked() instanceof Player && event.getWhoClicked().isOp()) {
+				if (event.getWhoClicked() != null && event.getWhoClicked() instanceof Player) {
 					if (BMenuBook.isMenuBook(event.getCurrentItem())) {
-						P.p.mainMenu.show((Player) event.getWhoClicked());
+						P.p.getPluginRegistry().getMainMenu().show((Player) event.getWhoClicked());
 						return;
 					}
 				}
@@ -78,11 +78,11 @@ public class MenuListener implements Listener {
 		// Get the Menuview and check what was clicked
 		MenuView view = (MenuView) holder;
 		if (event.getClickedInventory() == null || event.getClickedInventory().getHolder() != holder) {
-			view.getMenu().clickOnPlayerInv(event, view);
+			view.getMenu().onClickOnPlayerInv(event, view);
 			return;
 		}
 		if (event.getCurrentItem() == null || event.getCurrentItem().getType().equals(Material.AIR)) {
-			view.getMenu().clickOnEmptySlot(event, view);
+			view.getMenu().onClickOnEmptySlot(event, view);
 			return;
 		}
 		view.getMenu().clickOnSlot(event, view);
@@ -117,7 +117,7 @@ public class MenuListener implements Listener {
 				return;
 			}
 			if (event.getPlayer() instanceof Player) {
-				close.getMenu().closingMenu(((Player) event.getPlayer()), close, null);
+				close.getMenu().onClosingMenu(((Player) event.getPlayer()), close, null);
 			}
 			close.closed();
 		}
@@ -128,7 +128,7 @@ public class MenuListener implements Listener {
 		if (event.hasItem() && (event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK))) {
 			if (BMenuBook.isMenuBook(event.getItem())) {
 				event.setCancelled(true);
-				P.p.mainMenu.show(event.getPlayer());
+				P.p.getPluginRegistry().getMainMenu().show(event.getPlayer());
 			}
 		}
 

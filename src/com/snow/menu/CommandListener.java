@@ -12,7 +12,7 @@ public class CommandListener implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if (sender instanceof Player) {
 			if (sender.isOp()) {
-				P.p.mainMenu.show((Player) sender);
+				P.p.testMain.show((Player) sender);
 			}
 		}
 		return true;

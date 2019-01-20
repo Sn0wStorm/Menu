@@ -19,7 +19,7 @@ public class CommandBookButton extends BookButton {
 	}
 
 	@Override
-	public boolean click(Player player) {
+	public boolean onClick(Player player) {
 		player.performCommand(cmd);
 		return reopen;
 	}
