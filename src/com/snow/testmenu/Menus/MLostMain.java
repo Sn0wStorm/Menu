@@ -1,7 +1,11 @@
 package com.snow.testmenu.Menus;
 
+import com.snow.menu.Buttons.Button;
+import com.snow.menu.Buttons.IButton;
+import com.snow.menu.IMenu;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 
 import com.snow.menu.Buttons.Basic.BEmptyTile;
@@ -47,6 +51,14 @@ public class MLostMain extends Menu implements EditableMenu {
 		}, 10);
 		addButton(new BEmptyTile(), 4, 8);
 		addButton(new BBookText(Material.BOOK, "Ein Menüdialog im Buch"), 4, 6);
+		Menu m = P.p.getRegistry().getMenu(new NamespacedKey("lostisle", "shoplist"));
+		Button is = P.p.getRegistry().getButton(new NamespacedKey("lostisle", "insel"));
+		if (is != null) {
+			addButton(is, 1, 4);
+		}
+		if (m != null) {
+			addButton(new BShowMenu(Material.DIAMOND, "Shopliste").setMenuToShow(m), 1, 5);
+		}
 		BLostSettings.init();
 	}
 

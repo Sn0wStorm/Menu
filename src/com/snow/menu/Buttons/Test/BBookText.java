@@ -17,7 +17,7 @@ public class BBookText extends Button {
 	private static FancyMessage msg;
 
 	public BBookText(Material type, String name) {
-		super(type, (short)0, name);
+		super(type, name);
 	}
 
 

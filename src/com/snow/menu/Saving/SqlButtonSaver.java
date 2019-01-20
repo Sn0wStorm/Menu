@@ -20,7 +20,6 @@ import org.bukkit.scheduler.BukkitTask;
 import com.snow.menu.Buttons.Attributes.SaveableButton;
 import com.snow.menu.Buttons.Attributes.SaveableButtonHandler;
 import com.snow.menu.Buttons.GlobalButton;
-import com.snow.menu.Buttons.UnknownButton;
 import com.snow.menu.Menus.Attributes.SaveableMenu;
 import com.snow.menu.Menus.Attributes.SaveableMenuHandler;
 import com.snow.menu.P;
@@ -84,26 +83,18 @@ public class SqlButtonSaver implements Runnable {
 				P.p.log("saving");
 				state = 2;
 
-				task = P.p.getServer().getScheduler().runTask(P.p, new Runnable() {
-					@Override
-					public void run() {
-						try {
-							save();
-						} catch (Exception e) {
-							e.printStackTrace();
-							task = null;
-							state = 0;
-						}
+				task = P.p.getServer().getScheduler().runTask(P.p, () -> {
+					try {
+						save();
+					} catch (Exception e) {
+						e.printStackTrace();
+						task = null;
+						state = 0;
 					}
 				});
 
 			} else {
-				task = P.p.getServer().getScheduler().runTaskAsynchronously(P.p, new Runnable() {
-					@Override
-					public void run() {
-						loading();
-					}
-				});
+				task = P.p.getServer().getScheduler().runTaskAsynchronously(P.p, this::loading);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -126,7 +117,6 @@ public class SqlButtonSaver implements Runnable {
 					b[i] = new SaveDataB(
 							s.save_getType(),
 							s.save_getName(),
-							s.save_getDurability(),
 							s.save_getAmount(),
 							s.save_getButtonType(),
 							s.save_getClassName(),
@@ -170,12 +160,7 @@ public class SqlButtonSaver implements Runnable {
 		}
 
 
-		task = P.p.getServer().getScheduler().runTaskAsynchronously(P.p, new Runnable() {
-			@Override
-			public void run() {
-				saving(b, m);
-			}
-		});
+		task = P.p.getServer().getScheduler().runTaskAsynchronously(P.p, () -> saving(b, m));
 	}
 
 	// Async thread, do writing to disk, etc
@@ -189,14 +174,15 @@ public class SqlButtonSaver implements Runnable {
 			}
 
 			Statement statement = connection.createStatement();
-			statement.executeQuery("TRUNCATE zmenu_Buttons;");
+			statement.executeUpdate("TRUNCATE zmenu_Buttons;");
 
+			int id = 0;
 			for (SaveDataB b : bData) {
 				if (b != null) {
-					PreparedStatement ps = connection.prepareStatement("INSERT INTO zmenu_Buttons (mat, name, dur, amount, type, clazz, menu, slot, text, extra) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
-					ps.setString(1, b.a);
-					ps.setString(2, b.b);
-					ps.setInt(3, b.c);
+					PreparedStatement ps = connection.prepareStatement("INSERT INTO zmenu_Buttons (id, mat, name, amount, type, clazz, menu, slot, text, extra) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
+					ps.setInt(1, id);
+					ps.setString(2, b.a);
+					ps.setString(3, b.b);
 					ps.setInt(4, b.d);
 					ps.setInt(5, b.e);
 					ps.setString(6, b.f);
@@ -206,21 +192,25 @@ public class SqlButtonSaver implements Runnable {
 					ps.setString(10, b.j);
 
 					ps.executeUpdate();
+					id++;
 				}
 			}
 
 			statement = connection.createStatement();
-			statement.executeQuery("TRUNCATE zmenu_CustMenus;");
+			statement.executeUpdate("TRUNCATE zmenu_CustMenus;");
 
+			id = 0;
 			for (SaveDataM m : mData) {
 				if (m != null) {
-					PreparedStatement ps = connection.prepareStatement("INSERT INTO zmenu_CustMenus (name, clazz, size, extra) VALUES (?, ?, ?, ?);");
-					ps.setString(1, m.a);
-					ps.setString(2, m.b);
-					ps.setInt(3, m.c);
-					ps.setString(4, m.d);
+					PreparedStatement ps = connection.prepareStatement("INSERT INTO zmenu_CustMenus (id, name, clazz, size, extra) VALUES (?, ?, ?, ?, ?);");
+					ps.setInt(1, id);
+					ps.setString(2, m.a);
+					ps.setString(3, m.b);
+					ps.setInt(4, m.c);
+					ps.setString(5, m.d);
 
 					ps.executeUpdate();
+					id++;
 				}
 			}
 
@@ -250,8 +240,8 @@ public class SqlButtonSaver implements Runnable {
 				}
 			}
 
-			final List<SaveDataB> bData = new ArrayList<SaveDataB>();
-			final List<SaveDataM> mData = new ArrayList<SaveDataM>();
+			final List<SaveDataB> bData = new ArrayList<>();
+			final List<SaveDataM> mData = new ArrayList<>();
 
 			Statement statement = connection.createStatement();
 			ResultSet res = statement.executeQuery("SELECT * FROM zmenu_CustMenus;");
@@ -263,22 +253,19 @@ public class SqlButtonSaver implements Runnable {
 			statement = connection.createStatement();
 			res = statement.executeQuery("SELECT * FROM zmenu_Buttons;");
 			while(res.next()) {
-				bData.add(new SaveDataB(res.getString("mat"), res.getString("name"), (short) res.getInt("dur"), res.getInt("amount"), res.getInt("type"), res.getString("clazz"),
+				bData.add(new SaveDataB(res.getString("mat"), res.getString("name"), res.getInt("amount"), res.getInt("type"), res.getString("clazz"),
 						res.getInt("menu"), res.getInt("slot"), res.getString("text"), res.getString("extra")));
 			}
 			res.close();
 
-			P.p.getServer().getScheduler().runTask(P.p, new Runnable() {
-				@Override
-				public void run() {
-					try {
-						load(bData, mData);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-					state = 0;
-					task = null;
+			P.p.getServer().getScheduler().runTask(P.p, () -> {
+				try {
+					load(bData, mData);
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
+				state = 0;
+				task = null;
 			});
 
 		} catch (Exception e) {
@@ -290,7 +277,7 @@ public class SqlButtonSaver implements Runnable {
 
 	// Main Task loading
 	private void load(List<SaveDataB> bData, List<SaveDataM> mData) {
-		List<SaveableMenu> loadList = new ArrayList<SaveableMenu>();
+		List<SaveableMenu> loadList = new ArrayList<>();
 		for (SaveDataM m : mData) {
 			loadList.add(SaveableMenuHandler.load(m.a, m.b, m.c, m.d, true));
 		}
@@ -300,12 +287,12 @@ public class SqlButtonSaver implements Runnable {
 			if (loadList.size() <= menuId) {
 				menuId = -1;
 			}
-			loadButton(b.a, b.b, b.c, b.d, b.e, b.f, menuId == -1 ? null : loadList.get(menuId), b.h, b.i, b.j);
+			loadButton(b.a, b.b, b.d, b.e, b.f, menuId == -1 ? null : loadList.get(menuId), b.h, b.i, b.j);
 		}
 	}
 
 	// The containing Menu must have been loaded before
-	public static void loadButton(String mat, String name, int dur, int amount, int buttonType, String clazz, SaveableMenu menu, int slot, String text, String extra) {
+	public static void loadButton(String mat, String name, int amount, int buttonType, String clazz, SaveableMenu menu, int slot, String text, String extra) {
 		if (mat == null || clazz == null) {
 			return;
 		}
@@ -317,7 +304,7 @@ public class SqlButtonSaver implements Runnable {
 
 		try {
 			Class<? extends SaveableButton> buttonClass = Class.forName(clazz).asSubclass(SaveableButton.class);
-			SaveableButton b = buttonClass.getConstructor(Material.class, short.class, String.class).newInstance(type, (short) dur, name);
+			SaveableButton b = buttonClass.getConstructor(Material.class, String.class).newInstance(type, name);
 			SaveableButtonHandler s = b.getSaveHandler();
 
 			s.load_amount(amount);
@@ -341,19 +328,11 @@ public class SqlButtonSaver implements Runnable {
 			s.loadDone();
 
 		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			P.p.log("Loading as Unknown Button: " + name);
-			UnknownButton b = new UnknownButton(type, (short) dur, name, clazz);
+			UnknownButton b = new UnknownButton(type, name, clazz);
 			b.load(menu, slot, extra, text, buttonType);
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (ClassCastException e) {
+		} catch (InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException | ClassCastException e) {
 			e.printStackTrace();
 		}
 	}
@@ -384,28 +363,28 @@ public class SqlButtonSaver implements Runnable {
 
 			Statement statement = connection.createStatement();
 			statement.execute("CREATE TABLE IF NOT EXISTS zmenu_Buttons (" +
+					"id INT, " +
 					"mat VARCHAR(127), " +
 					"name VARCHAR(127), " +
-					"dur INT, " +
 					"amount INT, " +
 					"type TINYINT UNSIGNED, " +
 					"clazz VARCHAR(127), " +
 					"menu INT, " +
 					"slot TINYINT UNSIGNED, " +
 					"text TEXT, " +
-					"extra TEXT);");
+					"extra TEXT, " +
+					"PRIMARY KEY (id));");
 			statement = connection.createStatement();
 			statement.execute("CREATE TABLE IF NOT EXISTS zmenu_CustMenus (" +
+					"id INT, " +
 					"name VARCHAR(127), " +
 					"clazz VARCHAR(127), " +
 					"size TINYINT UNSIGNED, " +
-					"extra TEXT);");
+					"extra TEXT, " +
+					"PRIMARY KEY (id));");
 
 			connect = str;
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return false;
-		} catch (ClassNotFoundException e) {
+		} catch (SQLException | ClassNotFoundException e) {
 			e.printStackTrace();
 			return false;
 		}

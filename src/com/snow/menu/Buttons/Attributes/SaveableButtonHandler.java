@@ -51,11 +51,6 @@ public class SaveableButtonHandler {
 		return getButton().getType().toString();
 	}
 
-	// Bukkit Durability of the Button
-	public short save_getDurability() {
-		return getButton().getDurability();
-	}
-
 	// ItemStack amount of the Button
 	public int save_getAmount() {
 		return getButton().getAmount();

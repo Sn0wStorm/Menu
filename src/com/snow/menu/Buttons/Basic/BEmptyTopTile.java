@@ -12,7 +12,7 @@ import com.snow.menu.Buttons.Attributes.ImmovableButton;
 
 public class BEmptyTopTile extends BEmptyTile implements ImmovableButton {
 	public BEmptyTopTile() {
-		super(DyeColor.WHITE);
+		super(DyeColor.GRAY);
 	}
 
 	public BEmptyTopTile(DyeColor color) {

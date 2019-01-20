@@ -20,24 +20,12 @@ public class BItemSelect extends Button {
 		super(type);
 	}
 
-	public BItemSelect(Material type, short durability) {
-		super(type, durability);
-	}
-
 	public BItemSelect(Material type, String name) {
 		super(type, name);
 	}
 
-	public BItemSelect(Material type, short durability, String name) {
-		super(type, durability, name);
-	}
-
 	public BItemSelect(Material type, String name, String... lore) {
 		super(type, name, lore);
-	}
-
-	public BItemSelect(Material type, short durability, String name, String... lore) {
-		super(type, durability, name, lore);
 	}
 
 	public BItemSelect(ItemStack item) {

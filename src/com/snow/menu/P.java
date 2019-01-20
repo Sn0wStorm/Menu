@@ -18,6 +18,8 @@ import com.snow.menu.Menus.MItemSelect;
 import com.snow.menu.Saving.SqlButtonSaver;
 import com.snow.menu.Saving.XMan;
 
+import java.sql.SQLException;
+
 public class P extends JavaPlugin {
 
 	public static P p;
@@ -26,6 +28,8 @@ public class P extends JavaPlugin {
 
 	public MLostMain mainMenu;
 	//public int id = 0;
+
+	private PluginRegistry registry = new PluginRegistry();
 
 	@Override
 	public void onEnable() {
@@ -48,12 +52,12 @@ public class P extends JavaPlugin {
 
 		getServer().getPluginManager().registerEvents(menuListener, this);
 		getServer().getPluginManager().registerEvents(bookListener, this);
-		getCommand("menu").setExecutor(new CommandListener());
+		getCommand("testmenu").setExecutor(new CommandListener());
 		getCommand("bcls").setExecutor(BookButton.clickListener);
 
 		readConfig();
 		hookPlugins();
-		initBaseMenus();
+		getServer().getScheduler().scheduleSyncDelayedTask(this, this::initBaseMenus, 1);
 		loadData();
 
 		// Heartbeat
@@ -69,9 +73,18 @@ public class P extends JavaPlugin {
 		if (p != null) {
 			ItemReplacer.revertAll();
 			clearData();
+			try {
+				SqlButtonSaver.closeConnection();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 
 		this.log(this.getDescription().getName() + " disabled!");
+	}
+
+	public PluginRegistry getRegistry() {
+		return registry;
 	}
 
 	public void reload() {
@@ -107,7 +120,7 @@ public class P extends JavaPlugin {
 
 	public void initBaseMenus() {
 		mainMenu = new MLostMain();
-		MItemSelect.initAll();
+		MItemSelect.allItems = new MItemSelect();
 	}
 
 	/*@SuppressWarnings("deprecation")

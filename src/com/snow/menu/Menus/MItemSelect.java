@@ -1,37 +1,26 @@
 package com.snow.menu.Menus;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
+import com.snow.menu.Buttons.Tools.BItemSelect;
+import com.snow.menu.Buttons.Tools.Selector;
+import com.snow.menu.MenuView;
+import com.snow.menu.Menus.Attributes.NoBackMenu;
+import com.snow.menu.Menus.Attributes.SelectorMenu;
+import com.snow.menu.Util.NMSUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import com.snow.menu.Buttons.Basic.BNextPage;
-import com.snow.menu.Buttons.Basic.BPrevPage;
-import com.snow.menu.Buttons.Button;
-import com.snow.menu.Buttons.Tools.BItemSelect;
-import com.snow.menu.Buttons.Tools.Selector;
-import com.snow.menu.Menu;
-import com.snow.menu.MenuView;
-import com.snow.menu.Menus.Attributes.NoBackMenu;
-import com.snow.menu.Menus.Attributes.PagedMenu;
-import com.snow.menu.Menus.Attributes.PagedMenuHandler;
-import com.snow.menu.Util.NMSUtil;
-
-public class MItemSelect extends Menu implements PagedMenu, NoBackMenu {
+public class MItemSelect extends ListMenu<ItemStack> implements NoBackMenu, SelectorMenu {
 
 	public static MItemSelect allItems;
-	public PagedMenuHandler menuPages;
 
 	public MItemSelect() {
-		super("Item Auswählen", 6);
+		super("Item Auswählen", NMSUtil.getAllItems(), item -> new BItemSelect(item));
 	}
 
-	public static MItemSelect initAll() {
+	/*public static MItemSelect initAll() {
 		int slot = 9;
 		MItemSelect head = new MItemSelect();
-		List<MItemSelect> pages = new ArrayList<MItemSelect>();
+		List<MItemSelect> pages = new ArrayList<>();
 		MItemSelect currentPage = head;
 		pages.add(head);
 		List<ItemStack> all = NMSUtil.getAllItems();
@@ -48,10 +37,10 @@ public class MItemSelect extends Menu implements PagedMenu, NoBackMenu {
 				}
 			}
 		}
-		PagedMenuHandler.init(pages.toArray(new MItemSelect[pages.size()]));
+		PagedMenuHandler.init(pages.toArray(new MItemSelect[0]));
 		allItems = head;
 		return head;
-	}
+	}*/
 
 	// useSelector() Method needs to be called BEFORE calling this!
 	// Instead, you can use show(Player, Selector)
@@ -60,53 +49,22 @@ public class MItemSelect extends Menu implements PagedMenu, NoBackMenu {
 		if (BItemSelect.getSelector(player.getUniqueId()) == null) {
 			throw new IllegalStateException("No Selector Specified!");
 		}
-
-		Button b = getButton(0, 8);
-		if (b != null && b instanceof BNextPage) {
-			b.setLoreLine(0, "Seite " + (menuPages.getPageIndex() + 1) + "/" + menuPages.getNumPages());
-		}
-		b = getButton(0, 7);
-		if (b != null && b instanceof BPrevPage) {
-			b.setLoreLine(0, "Seite " + (menuPages.getPageIndex() + 1) + "/" + menuPages.getNumPages());
-		}
-		MenuView view = super.show(player);
-		PagedMenuHandler.cache(player.getUniqueId(), view);
-		return view;
+		return super.show(player);
 	}
 
+	@Override
 	public MenuView show(Player player, Selector selector) {
 		BItemSelect.useSelector(player.getUniqueId(), selector);
 		return show(player);
 	}
 
-	@Override
+	/*@Override
 	public void closingMenu(Player player, MenuView view, MenuView target) {
 		super.closingMenu(player, view, target);
 		if (target == null || !(target.getMenu() instanceof MItemSelect)) {
 			removeSelector(player.getUniqueId());
 			PagedMenuHandler.clearCache(player);
 		}
-	}
+	}*/
 
-	@Override
-	public PagedMenuHandler getMenuPages() {
-		return menuPages;
-	}
-
-	@Override
-	public void setMenuPages(PagedMenuHandler p) {
-		menuPages = p;
-	}
-
-	public static void useSelector(UUID player, Selector selector) {
-		BItemSelect.useSelector(player, selector);
-	}
-
-	public static void removeSelector(UUID player) {
-		BItemSelect.removeSelector(player);
-	}
-
-	public static Selector getSelector(UUID player) {
-		return BItemSelect.getSelector(player);
-	}
 }

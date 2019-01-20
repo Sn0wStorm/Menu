@@ -8,23 +8,20 @@ import org.bukkit.inventory.ItemStack;
 
 /*
   A Stated Button with only one additional state: off
-  Will always have the two items getItem() and getItem(0)
+  Will always have the two items getItem(0) and getItem(1)
   The Main item will have a green name, the other a red name
   Lore depending on the on/off state will be added
 
-  Need to override getItem() to return either getOn() or getOff()
-  return condition ? getOn() : getOff();
+  Need to Override shouldShowOn to return which button to show
 */
 
-public abstract class OnOffButton extends StatedButton {
+public abstract class OnOffButton extends MultiStateButton {
+
+	public static final boolean ON = true;
+	public static final boolean OFF = false;
 
 	public OnOffButton(Material type) {
 		super(type);
-		initOnOff();
-	}
-
-	public OnOffButton(Material type, short durability) {
-		super(type, durability);
 		initOnOff();
 	}
 
@@ -33,18 +30,8 @@ public abstract class OnOffButton extends StatedButton {
 		initOnOff();
 	}
 
-	public OnOffButton(Material type, short durability, String name) {
-		super(type, durability, name);
-		initOnOff();
-	}
-
 	public OnOffButton(Material type, String name, String... lore) {
 		super(type, name, lore);
-		initOnOff();
-	}
-
-	public OnOffButton(Material type, short durability, String name, String... lore) {
-		super(type, durability, name, lore);
 		initOnOff();
 	}
 
@@ -54,11 +41,11 @@ public abstract class OnOffButton extends StatedButton {
 
 
 	public ItemStack getOn() {
-		return getItem();
+		return getItem(0);
 	}
 
 	public ItemStack getOff() {
-		return getState(0);
+		return getItem(1);
 	}
 
 	public ItemStack getItem(boolean on) {
@@ -66,7 +53,15 @@ public abstract class OnOffButton extends StatedButton {
 	}
 
 	@Override
-	public abstract ItemStack getItem(Player player, MenuView view);
+	public int showState(Player player, MenuView view) {
+		return shouldShowOn(player, view) ? 0 : 1;
+	}
+
+	// Return true if the ON button should be showed to the Playyer
+	// Return false if the OFF button ...
+	public abstract boolean shouldShowOn(Player player, MenuView view);
+
+	// Methods below can be overridden to initialize different On Off Names and Lore
 
 	protected void initOnOff() {
 		String name = getName();
@@ -74,19 +69,19 @@ public abstract class OnOffButton extends StatedButton {
 			name = getType().name();
 		}
 		name = ChatColor.stripColor(name);
-		setName("&a" + name);
-		setName(0, "&c" + name);
-		setGlowing(true);
+		setName(0, "&a" + name);
+		setName(1, "&c" + name);
+		setGlowing(0, true);
 		initLoreDeAc();
 	}
 
 	protected void initLoreDeAc() {
-		addLore("", "&8Klicken zum deaktivieren");
-		addLore(0, "", "&8Klicken zum aktivieren");
+		addLore(0, "", "&8Klicken zum deaktivieren");
+		addLore(1, "", "&8Klicken zum aktivieren");
 	}
 
 	protected void initLoreOnOff() {
-		addLore("", "&8Klicken zum Auschalten");
-		addLore(0, "", "&8Klicken zum Einschalten");
+		addLore(0, "", "&8Klicken zum Auschalten");
+		addLore(1, "", "&8Klicken zum Einschalten");
 	}
 }

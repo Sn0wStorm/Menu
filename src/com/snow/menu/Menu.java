@@ -5,7 +5,9 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.stream.Stream;
 
+import com.snow.menu.Menus.Attributes.NoBackMenu;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -85,7 +87,7 @@ public class Menu implements IMenu {
 
 	@Override
 	public boolean isNoBack() {
-		return noBack;
+		return noBack || this instanceof NoBackMenu;
 	}
 
 	@Override
@@ -205,6 +207,10 @@ public class Menu implements IMenu {
 				return Menu.this.iterator(clazz);
 			}
 		};
+	}
+
+	public Stream<Button> stream() {
+		return Arrays.stream(buttons);
 	}
 
 	// Remove a Button by row and column, returns Button that was removed

@@ -1,7 +1,5 @@
 package com.snow.menu.Util;
 
-import net.minecraft.server.v1_13_R2.NBTTagCompound;
-import net.minecraft.server.v1_13_R2.NBTTagList;
 import net.minecraft.server.v1_13_R2.RegistryMaterials;
 import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
@@ -12,7 +10,7 @@ import java.util.stream.Collectors;
 public class NMSUtil {
 
 
-	public static ItemStack setGlowing(ItemStack item, boolean glowing){
+	/*public static ItemStack setGlowing(ItemStack item, boolean glowing){
 		net.minecraft.server.v1_13_R2.ItemStack nmsStack = CraftItemStack.asNMSCopy(item);
 		NBTTagCompound tag = null;
 		if (!nmsStack.hasTag()) {
@@ -32,7 +30,7 @@ public class NMSUtil {
 		}
 		nmsStack.setTag(tag);
 		return CraftItemStack.asCraftMirror(nmsStack);
-	}
+	}*/
 
 	public static List<ItemStack> getAllItems() {
 		return RegistryMaterials.ITEM.f()

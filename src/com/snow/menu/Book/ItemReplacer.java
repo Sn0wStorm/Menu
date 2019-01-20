@@ -1,13 +1,12 @@
 package com.snow.menu.Book;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import com.snow.menu.P;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
 
-import com.snow.menu.P;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ItemReplacer {
 
@@ -65,6 +64,11 @@ public class ItemReplacer {
 			player.getInventory().setItemInMainHand(replaced);
 
 			player.updateInventory();
+
+			P.p.getServer().getScheduler().scheduleSyncDelayedTask(P.p, () -> {
+				player.getInventory().setItemInMainHand(replaced);
+				player.updateInventory();
+			});
 		}
 		if (remove) {
 			replacedItems.remove(player.getName());

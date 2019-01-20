@@ -2,22 +2,24 @@ package com.snow.menu.Buttons;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiConsumer;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import com.snow.menu.Menu;
 import com.snow.menu.MenuView;
-import com.snow.menu.Util.NMSUtil;
 import com.snow.menu.P;
 
   /*
     A Button that can be added to a Menu
-    should be extended to add functionality other than showing text
+    can be extended to add functionality other than showing text
     each Button instance can only be added to one menu
   */
 
@@ -32,7 +34,11 @@ public class Button implements IButton {
 
 	// Settings
 	private boolean movable = true;
-	private int click1 = 400, click2 = 150;
+	private int clickSame = 400, clickOther = 150;
+	private boolean disabled;
+
+	// Optional function to execute on click
+	private BiConsumer<Player, MenuView> function;
 
 	/*public Button() {
 		item = new ItemStack(Material.STONE);
@@ -43,40 +49,25 @@ public class Button implements IButton {
 	/*   -------  Constructors  -------   */
 
 	public Button(Material type) {
-		item = new ItemStack(type);
-		item.setItemMeta(P.p.getServer().getItemFactory().getItemMeta(type));
-	}
-
-	public Button(Material type, short durability) {
-		item = new ItemStack(type);
-		item.setItemMeta(P.p.getServer().getItemFactory().getItemMeta(type));
-		item.setDurability(durability);
+		this (type, null);
 	}
 
 	public Button(Material type, String name) {
-		this(type, (short) -1, name);
-	}
-
-	public Button(Material type, short durability, String name) {
-		this(type, durability, name, (String[]) null);
+		this(type, name, (String[]) null);
 	}
 
 	public Button(Material type, String name, String... lore) {
-		this(type, (short) -1, name, lore);
-	}
-
-	public Button(Material type, short durability, String name, String... lore) {
 		item = new ItemStack(type);
-		if (durability != -1) {
-			item.setDurability(durability);
-		}
+
 		ItemMeta meta = P.p.getServer().getItemFactory().getItemMeta(type);
+
+		meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 
 		if (name != null) {
 			meta.setDisplayName(nameColor(name));
 		}
 		if (lore != null) {
-			List<String> l = new ArrayList<String>();
+			List<String> l = new ArrayList<>();
 			for (String line : lore) {
 				l.add(loreColor(line));
 			}
@@ -96,6 +87,23 @@ public class Button implements IButton {
 	/*   -------  Settings to change on the Button, makes change for all Players  -------   */
 	/*   -------  These return the Button instance for chaining  -------   */
 
+	// Give the Button a Function in form of a Lambda Expression or Method Reference
+	// will be executed when the Button is clicked
+	// instead the click Method can be overridden
+	// example:   setFunction((player, view) -> player.sendMessage("clicked a button"));
+	@Override
+	public Button setClickFunction(BiConsumer<Player, MenuView> function) {
+		this.function = function;
+		return this;
+	}
+
+	// Setting the Button to be disabled makes not show in menus
+	@Override
+	public Button setDisabled(boolean disabled) {
+		this.disabled = disabled;
+		return this;
+	}
+
 	// Set whether the Button should be able to be moved in an EditableMenu
 	// Default is true
 	// Setting to false is the same as implementing ImmovableButton
@@ -111,8 +119,8 @@ public class Button implements IButton {
 	// differentButton is the Delay if the Player clicked an other Button before
 	@Override
 	public Button setClickDelay(int sameButton, int differentButton) {
-		click1 = sameButton;
-		click2 = differentButton;
+		clickSame = sameButton;
+		clickOther = differentButton;
 		return this;
 	}
 
@@ -121,17 +129,24 @@ public class Button implements IButton {
 		return movable;
 	}
 
+	@Override
+	public boolean isDisabled() {
+		return disabled;
+	}
 
 
 	/*  ------  Methods called by the Listeners, may be overridden to add functionality  -------   */
 
 	// Button was clicked by a Player
 	// The Event is already cancelled and can be checked for clicktype etc.
+	// event.getWhoClicked() is already checked for instanceof Player
+	// If not overridden, the function given with setClickFunction will be executed
 	@Override
 	public void click(InventoryClickEvent event, MenuView view) {
+		if (function != null) function.accept(((Player) event.getWhoClicked()), view);
 	}
 
-	// Button was clicked by a Player, but he is not allowed to (canclick returned false)
+	// Button was clicked by a Player, but he is not allowed to (canClick returned false)
 	// The Event is already cancelled and can be checked for clicktype etc.
 	@Override
 	public void clickNotAllowed(InventoryClickEvent event, MenuView view) {
@@ -139,9 +154,10 @@ public class Button implements IButton {
 
 	// Should return false if the Button should not be shown for the Player
 	// Permission checks, etc can be done here
+	// If not overridden, it will be shown if it is not disabled
 	@Override
 	public boolean canSee(Player player, MenuView view) {
-		return true;
+		return !disabled;
 	}
 
 	// Should return false if the Button can not be clicked by the Player
@@ -157,7 +173,7 @@ public class Button implements IButton {
 	// Override this for buttons that should not be clicked often (maybe due to processing power)
 	@Override
 	public int getClickDelay(Player player, MenuView view, boolean sameButton) {
-		return sameButton ? click1 : click2;
+		return sameButton ? clickSame : clickOther;
 	}
 
 	// Method that is called by the Menu to get the item to display
@@ -250,16 +266,6 @@ public class Button implements IButton {
 	}
 
 	@Override
-	public short getDurability() {
-		return item.getDurability();
-	}
-
-	@Override
-	public void setDurability(short durability) {
-		item.setDurability(durability);
-	}
-
-	@Override
 	public List<String> getLore() {
 		return item.getItemMeta().getLore();
 	}
@@ -289,7 +295,7 @@ public class Button implements IButton {
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
 		if (lore == null) {
-			lore = new ArrayList<String>();
+			lore = new ArrayList<>();
 		}
 		for (int i = lore.size(); i < line; i++) {
 			lore.add("");
@@ -308,7 +314,7 @@ public class Button implements IButton {
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
 		if (lore == null) {
-			lore = new ArrayList<String>();
+			lore = new ArrayList<>();
 		}
 		for (String line : lines) {
 			lore.add(loreColor(line));
@@ -319,7 +325,14 @@ public class Button implements IButton {
 
 	@Override
 	public void setGlowing(boolean glow) {
-		item = NMSUtil.setGlowing(item, glow);
+		if (glow) {
+			item.addUnsafeEnchantment(Enchantment.LUCK, 1);
+			ItemMeta meta = item.getItemMeta();
+			meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+			item.setItemMeta(meta);
+		} else {
+			item.removeEnchantment(Enchantment.LUCK);
+		}
 	}
 
 
@@ -360,6 +373,16 @@ public class Button implements IButton {
 	@Override
 	public void setAmount(int amount) {
 		item.setAmount(amount);
+	}
+
+	@Override
+	public ItemMeta getItemMeta() {
+		return item.getItemMeta();
+	}
+
+	@Override
+	public void setItemMeta(ItemMeta meta) {
+		item.setItemMeta(meta);
 	}
 
 	// Returns the actual item representing the Button

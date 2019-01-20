@@ -26,24 +26,12 @@ public class BGenericEditable extends Button implements EditableButton {
 		super(type);
 	}
 
-	public BGenericEditable(Material type, short durability) {
-		super(type, durability);
-	}
-
 	public BGenericEditable(Material type, String name) {
 		super(type, name);
 	}
 
-	public BGenericEditable(Material type, short durability, String name) {
-		super(type, durability, name);
-	}
-
 	public BGenericEditable(Material type, String name, String... lore) {
 		super(type, name, lore);
-	}
-
-	public BGenericEditable(Material type, short durability, String name, String... lore) {
-		super(type, durability, name, lore);
 	}
 
 	public BGenericEditable(ItemStack item) {

@@ -4,7 +4,6 @@ public class SaveDataB {
 
 	public String a;
 	public String b;
-	public short c;
 	public int d;
 	public int e;
 	public String f;
@@ -13,10 +12,9 @@ public class SaveDataB {
 	public String i;
 	public String j;
 
-	public SaveDataB(String a, String b, short c, int d, int e, String f, int g, int h, String i, String j) {
+	public SaveDataB(String a, String b, int d, int e, String f, int g, int h, String i, String j) {
 		this.a = a;
 		this.b = b;
-		this.c = c;
 		this.d = d;
 		this.e = e;
 		this.f = f;

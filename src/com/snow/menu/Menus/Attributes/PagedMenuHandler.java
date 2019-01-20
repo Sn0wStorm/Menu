@@ -7,7 +7,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
 
+import com.snow.menu.Menu;
 import org.bukkit.entity.Player;
 
 import com.snow.menu.Buttons.Basic.BNextPage;
@@ -15,66 +18,47 @@ import com.snow.menu.Buttons.Basic.BPrevPage;
 import com.snow.menu.MenuView;
 import com.snow.menu.P;
 
-public class PagedMenuHandler {
-	private static Map<UUID, Set<MenuView>> cache = new HashMap<UUID, Set<MenuView>>();
-	private List<PagedMenuHandler> pages;
-	private PagedMenu menu;
+public class PagedMenuHandler<M extends PagedMenu> {
+	private static Map<UUID, Set<MenuView>> cache = new HashMap<>();
+	private List<PagedMenuHandler<M>> pages;
+	private M menu;
 	private int index;
 
-	public static void init(PagedMenu... menus) {
-		List<PagedMenuHandler> list = new ArrayList<PagedMenuHandler>();
+	public static <M extends PagedMenu> void init(M... menus) {
+		List<PagedMenuHandler<M>> list = new ArrayList<>();
 		for (int i = 0; i < menus.length; i++) {
-			PagedMenu menu = menus[i];
-			PagedMenuHandler h = new PagedMenuHandler(list, menu, i);
+			M menu = menus[i];
+			PagedMenuHandler<M> h = new PagedMenuHandler<>(list, menu, i);
 			list.add(h);
 			menu.setMenuPages(h);
 			menu.showBasicButtons(true);
 			if (i < menus.length - 1) {
-				menu.addButton(new BNextPage(h), BNextPage.getDefaultSlot());
+				menu.addButton(new BNextPage(h), BNextPage.getDefaultRow(), BNextPage.getDefaultColumn());
 			}
 			if (i > 0) {
-				menu.addButton(new BPrevPage(h), BPrevPage.getDefaultSlot());
+				menu.addButton(new BPrevPage(h), BPrevPage.getDefaultRow(), BPrevPage.getDefaultColumn());
 			}
 		}
 	}
 
-	private PagedMenuHandler(List<PagedMenuHandler> list, PagedMenu menu, int index) {
+	private PagedMenuHandler(List<PagedMenuHandler<M>> list, M menu, int index) {
 		this.pages = list;
 		this.menu = menu;
 		this.index = index;
 	}
 
-	public boolean hasNext() {
-		return (pages.size() > index + 1);
-	}
-
-	public PagedMenuHandler getNext() {
-		if (hasNext()) {
-			return pages.get(index + 1);
-		}
-		return null;
-	}
-
-	public PagedMenu getNextMenu() {
-		if (hasNext()) {
-			return pages.get(index + 1).menu;
-		}
-		return null;
-	}
-
-	public boolean hasPrev() {
-		return (index - 1 >= 0);
-	}
-
-	public PagedMenuHandler getPrev() {
-		if (hasPrev()) {
-			return pages.get(index - 1);
-		}
-		return null;
-	}
-
-	public PagedMenu getMenu() {
+	public M getMenu() {
 		return menu;
+	}
+
+	public void forAllPages(Consumer<M> action) {
+		for (PagedMenuHandler<M> l : allPages()) {
+			action.accept(l.getMenu());
+		}
+	}
+
+	public Stream<M> stream() {
+		return allPages().stream().map(PagedMenuHandler::getMenu);
 	}
 
 	public static MenuView getCached(UUID uuid, PagedMenu menu) {
@@ -93,7 +77,7 @@ public class PagedMenuHandler {
 		if (cache.containsKey(uuid)) {
 			cache.get(uuid).add(view);
 		} else {
-			Set<MenuView> set = new HashSet<MenuView>();
+			Set<MenuView> set = new HashSet<>();
 			set.add(view);
 			cache.put(uuid, set);
 		}
@@ -101,14 +85,66 @@ public class PagedMenuHandler {
 
 	public static void clearCache(Player player) {
 		cache.remove(player.getUniqueId());
-		P.p.log("Cache Cleared!");
+		//P.p.log("Cache Cleared!");
 	}
 
-	public PagedMenuHandler getPage(int index) {
+	public boolean isHead(M menu) {
+		return pages.get(0).getMenu() == menu;
+	}
+
+	public PagedMenuHandler<M> getPage(int index) {
 		if (index >= 0 && index < pages.size()) {
 			return pages.get(index);
 		}
 		return null;
+	}
+
+	public PagedMenuHandler<M> getFirst() {
+		return pages.get(0);
+	}
+
+	public boolean hasNext() {
+		return (pages.size() > index + 1);
+	}
+
+	public PagedMenuHandler<M> getNext() {
+		if (hasNext()) {
+			return pages.get(index + 1);
+		}
+		return null;
+	}
+
+	public M getNextMenu() {
+		if (hasNext()) {
+			return pages.get(index + 1).getMenu();
+		}
+		return null;
+	}
+
+	public boolean hasPrev() {
+		return (index - 1 >= 0);
+	}
+
+	public PagedMenuHandler<M> getPrev() {
+		if (hasPrev()) {
+			return pages.get(index - 1);
+		}
+		return null;
+	}
+
+	public M getPrevMenu() {
+		if (hasPrev()) {
+			return pages.get(index - 1).getMenu();
+		}
+		return null;
+	}
+
+	public PagedMenuHandler<M> getLast() {
+		return pages.get(pages.size() - 1);
+	}
+
+	public List<PagedMenuHandler<M>> allPages() {
+		return pages;
 	}
 
 	public int getNumPages() {
@@ -119,10 +155,10 @@ public class PagedMenuHandler {
 		return index;
 	}
 
-	public void addPage(PagedMenu... menus) {
+	public void addPage(M... menus) {
 		for (int i = 0; i < menus.length; i++) {
-			PagedMenu pmenu = menus[i];
-			PagedMenuHandler h = new PagedMenuHandler(pages, pmenu, i + index + 1);
+			M pmenu = menus[i];
+			PagedMenuHandler<M> h = new PagedMenuHandler<>(pages, pmenu, i + index + 1);
 			pages.add(h);
 			pmenu.setMenuPages(h);
 		}
@@ -139,6 +175,10 @@ public class PagedMenuHandler {
 			pages.remove(index);
 			updateIndex(index);
 		}
+	}
+
+	public boolean isPageOfThisMenu(Menu other) {
+		return other instanceof PagedMenu && ((PagedMenu) other).getMenuPages().pages == pages;
 	}
 
 	private void updateIndex(int startIndex) {

@@ -17,24 +17,12 @@ public class TakeoutButton extends Button implements TakeableButton {
 		super(type);
 	}
 
-	public TakeoutButton(Material type, short durability) {
-		super(type, durability);
-	}
-
 	public TakeoutButton(Material type, String name) {
 		super(type, name);
 	}
 
-	public TakeoutButton(Material type, short durability, String name) {
-		super(type, durability, name);
-	}
-
 	public TakeoutButton(Material type, String name, String... lore) {
 		super(type, name, lore);
-	}
-
-	public TakeoutButton(Material type, short durability, String name, String... lore) {
-		super(type, durability, name, lore);
 	}
 
 	public TakeoutButton(ItemStack item) {

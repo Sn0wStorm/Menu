@@ -21,12 +21,16 @@ public class BNextPage extends Button {
 
 	// Add This Button to the default slot in the menu
 	public BNextPage addToMenu(Menu menu) {
-		menu.addButton(this, getDefaultSlot());
+		menu.addButton(this, getDefaultRow(), getDefaultColumn());
 		return this;
 	}
 
-	public static int getDefaultSlot() {
+	public static int getDefaultColumn() {
 		return 8;
+	}
+
+	public static int getDefaultRow() {
+		return 0;
 	}
 
 	@Override
@@ -38,7 +42,7 @@ public class BNextPage extends Button {
 				MenuView cached = PagedMenuHandler.getCached(event.getWhoClicked().getUniqueId(), menu);
 				if (cached != null) {
 					cached.showAgain((Player) event.getWhoClicked(), view);
-					P.p.log("could show cached menu while going forward!");
+					//P.p.log("could show cached menu while going forward!");
 				} else {
 					menu.show((Player) event.getWhoClicked());
 				}

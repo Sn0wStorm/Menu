@@ -21,12 +21,16 @@ public class BPrevPage extends Button {
 
 	// Add This Button to the default slot in the menu
 	public BPrevPage addToMenu(Menu menu) {
-		menu.addButton(this, getDefaultSlot());
+		menu.addButton(this, getDefaultRow(), getDefaultColumn());
 		return this;
 	}
 
-	public static int getDefaultSlot() {
+	public static int getDefaultColumn() {
 		return 7;
+	}
+
+	public static int getDefaultRow() {
+		return 0;
 	}
 
 	@Override
@@ -38,7 +42,7 @@ public class BPrevPage extends Button {
 				MenuView cached = PagedMenuHandler.getCached(event.getWhoClicked().getUniqueId(), menu);
 				if (cached != null) {
 					cached.showAgain((Player) event.getWhoClicked(), view);
-					P.p.log("could show cached Menu while going back!");
+					//P.p.log("could show cached Menu while going back!");
 				} else {
 					menu.show((Player) event.getWhoClicked());
 				}

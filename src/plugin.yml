@@ -5,8 +5,7 @@ main: com.snow.menu.P
 authors: [Sn0wStorm]
 softdepend: [XServer]
 commands:
-  menu:
+  testmenu:
     description: Command for Administration
-    aliases: [menü]
   bcls:
     description: Command used by Clickable Books (do not change)

@@ -3,6 +3,7 @@ package com.snow.menu;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerEditBookEvent;
@@ -60,6 +61,8 @@ public class ButtonEditor extends EditableBookText {
 	private void addText(List<String> lore, List<String> pages) {
 		edit.text = new ArrayList<String>();
 		boolean firstLine = true;
+		boolean useFilter = button.getEditHandler().getFilter() != null;
+		int lines = 0;
 		for (String page : pages) {
 			if (!firstLine) {
 				if (page.isEmpty()) {
@@ -68,6 +71,10 @@ public class ButtonEditor extends EditableBookText {
 				edit.text.add(null);
 			}
 			for (String line : page.split("\n")) {
+				if (useFilter) {
+					line = button.getEditHandler().getFilter().apply(line);
+					if (line == null) continue;
+				}
 				if (firstLine) {
 					firstLine = false;
 					if (edit.nameEditable) {
@@ -77,6 +84,10 @@ public class ButtonEditor extends EditableBookText {
 				}
 				lore.add(Button.loreColor(line));
 				edit.text.add(line);
+				lines++;
+			}
+			if (lines >= edit.maxLines) {
+				return;
 			}
 		}
 	}

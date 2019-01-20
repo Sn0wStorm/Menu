@@ -25,24 +25,12 @@ public class GlobalEditableButton extends GlobalButton implements EditableButton
 		super(type);
 	}
 
-	public GlobalEditableButton(Material type, short durability) {
-		super(type, durability);
-	}
-
 	public GlobalEditableButton(Material type, String name) {
 		super(type, name);
 	}
 
-	public GlobalEditableButton(Material type, short durability, String name) {
-		super(type, durability, name);
-	}
-
 	public GlobalEditableButton(Material type, String name, String... lore) {
 		super(type, name, lore);
-	}
-
-	public GlobalEditableButton(Material type, short durability, String name, String... lore) {
-		super(type, durability, name, lore);
 	}
 
 	public GlobalEditableButton(ItemStack item) {

@@ -1,7 +1,8 @@
-package com.snow.menu.Buttons;
+package com.snow.menu.Saving;
 
 import java.io.StringReader;
 
+import com.snow.menu.Buttons.GlobalButton;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -16,8 +17,8 @@ import com.snow.menu.Menus.Attributes.SaveableMenu;
 
 public class UnknownButton extends GlobalButton {
 
-	public UnknownButton(Material type, short durability, String name, String clazz) {
-		super(type, durability, name);
+	public UnknownButton(Material type, String name, String clazz) {
+		super(type, name);
 		setSaveHandler(new SaveableUnknownButtonHandler(this, clazz));
 		setSaved(true);
 	}

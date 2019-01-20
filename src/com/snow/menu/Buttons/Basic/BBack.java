@@ -3,16 +3,15 @@ package com.snow.menu.Buttons.Basic;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
 
 import com.snow.menu.Buttons.Attributes.ImmovableButton;
-import com.snow.menu.Buttons.StatedButton;
+import com.snow.menu.Buttons.MultiStateButton;
 import com.snow.menu.MenuView;
 
-public class BBack extends StatedButton implements ImmovableButton {
+public class BBack extends MultiStateButton implements ImmovableButton {
 	public BBack() {
 		super(Material.BIRCH_STAIRS, "Zurück");
-		setState(0, new BEmptyTopTile().getItem());
+		setItem(1, new BEmptyTopTile().getItem());
 	}
 
 	public static int getDefaultSlot() {
@@ -27,11 +26,11 @@ public class BBack extends StatedButton implements ImmovableButton {
 	}
 
 	@Override
-	public ItemStack getItem(Player player, MenuView view) {
+	public int showState(Player player, MenuView view) {
 		if (view.getBackMenu() != null) {
-			return getItem();
+			return 0;
 		} else {
-			return getState(0);
+			return 1;
 		}
 	}
 }

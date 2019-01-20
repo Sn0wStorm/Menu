@@ -21,24 +21,12 @@ public class BShowMenu extends Button {
 		super(type);
 	}
 
-	public BShowMenu(Material type, short durability) {
-		super(type, durability);
-	}
-
 	public BShowMenu(Material type, String name) {
 		super(type, name);
 	}
 
-	public BShowMenu(Material type, short durability, String name) {
-		super(type, durability, name);
-	}
-
 	public BShowMenu(Material type, String name, String... lore) {
 		super(type, name, lore);
-	}
-
-	public BShowMenu(Material type, short durability, String name, String... lore) {
-		super(type, durability, name, lore);
 	}
 
 	public BShowMenu(ItemStack item) {

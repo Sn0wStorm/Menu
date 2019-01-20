@@ -21,8 +21,14 @@ public class BHome extends Button implements ImmovableButton {
 	}
 
 	@Override
+	public boolean canSee(Player player, MenuView view) {
+		return player.hasPermission("menu.home");
+	}
+
+	@Override
 	public void click(InventoryClickEvent event, MenuView view) {
 		if (P.p.mainMenu == view.getMenu()) return;
+		if (!event.getWhoClicked().hasPermission("menu.home")) return;
 		if (view.getHomeMenu() != null) {
 			view.getHomeMenu().showAgain((Player) event.getWhoClicked(), view);
 		} else {

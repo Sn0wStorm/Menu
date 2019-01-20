@@ -21,7 +21,7 @@ import com.snow.menu.Saving.SqlButtonSaver;
 
 public class GlobalButton extends Button implements SaveableButton {
 
-	private static Set<GlobalButton> buttons = new HashSet<GlobalButton>();
+	private static Set<GlobalButton> buttons = new HashSet<>();
 
 	private int slot;
 	private SaveableGlobalButtonHandler save = new SaveableGlobalButtonHandler(this);
@@ -30,24 +30,12 @@ public class GlobalButton extends Button implements SaveableButton {
 		super(type);
 	}
 
-	public GlobalButton(Material type, short durability) {
-		super(type, durability);
-	}
-
 	public GlobalButton(Material type, String name) {
 		super(type, name);
 	}
 
-	public GlobalButton(Material type, short durability, String name) {
-		super(type, durability, name);
-	}
-
 	public GlobalButton(Material type, String name, String... lore) {
 		super(type, name, lore);
-	}
-
-	public GlobalButton(Material type, short durability, String name, String... lore) {
-		super(type, durability, name, lore);
 	}
 
 	public GlobalButton(ItemStack item) {

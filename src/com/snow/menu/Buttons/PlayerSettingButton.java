@@ -20,36 +20,24 @@ import com.snow.menu.MenuView;
   As per Default the Button is not shown to players that have no stored setting
 */
 
-public class SettingButton extends OnOffButton {
+public class PlayerSettingButton extends OnOffButton {
 
-	private Map<UUID, AtomicBoolean> settings = new HashMap<UUID, AtomicBoolean>();
+	private Map<UUID, AtomicBoolean> settings = new HashMap<>();
 	public boolean showIfAbsent = false; // Should the button show for players that are not in the map
 
-	public SettingButton(Material type) {
+	public PlayerSettingButton(Material type) {
 		super(type);
 	}
 
-	public SettingButton(Material type, short durability) {
-		super(type, durability);
-	}
-
-	public SettingButton(Material type, String name) {
+	public PlayerSettingButton(Material type, String name) {
 		super(type, name);
 	}
 
-	public SettingButton(Material type, short durability, String name) {
-		super(type, durability, name);
-	}
-
-	public SettingButton(Material type, String name, String... lore) {
+	public PlayerSettingButton(Material type, String name, String... lore) {
 		super(type, name, lore);
 	}
 
-	public SettingButton(Material type, short durability, String name, String... lore) {
-		super(type, durability, name, lore);
-	}
-
-	public SettingButton(ItemStack itemOn, ItemStack itemOff) {
+	public PlayerSettingButton(ItemStack itemOn, ItemStack itemOff) {
 		super(itemOn, itemOff);
 	}
 
@@ -72,14 +60,9 @@ public class SettingButton extends OnOffButton {
 	}
 
 	@Override
-	public ItemStack getItem(Player player, MenuView view) {
+	public boolean shouldShowOn(Player player, MenuView view) {
 		AtomicBoolean b = settings.get(player.getUniqueId());
-		if (b != null) {
-			if (b.get()) {
-				return getItem();
-			}
-		}
-		return getState(0);
+		return b != null && b.get();
 	}
 
 	@Override

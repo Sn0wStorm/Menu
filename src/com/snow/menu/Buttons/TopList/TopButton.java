@@ -23,28 +23,13 @@ public class TopButton extends Button {
 		this.topList = topList;
 	}
 
-	public TopButton(Material type, TopList topList, short durability) {
-		super(type, durability);
-		this.topList = topList;
-	}
-
 	public TopButton(Material type, TopList topList, String name) {
 		super(type, name);
 		this.topList = topList;
 	}
 
-	public TopButton(Material type, TopList topList, short durability, String name) {
-		super(type, durability, name);
-		this.topList = topList;
-	}
-
 	public TopButton(Material type, TopList topList, String name, String... lore) {
 		super(type, name, lore);
-		this.topList = topList;
-	}
-
-	public TopButton(Material type, TopList topList, short durability, String name, String... lore) {
-		super(type, durability, name, lore);
 		this.topList = topList;
 	}
 

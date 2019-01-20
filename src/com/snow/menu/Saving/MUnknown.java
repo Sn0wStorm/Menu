@@ -1,4 +1,4 @@
-package com.snow.menu.Menus;
+package com.snow.menu.Saving;
 
 import com.snow.menu.Menu;
 import com.snow.menu.Menus.Attributes.SaveableMenu;

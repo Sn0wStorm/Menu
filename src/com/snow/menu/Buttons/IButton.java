@@ -1,6 +1,7 @@
 package com.snow.menu.Buttons;
 
 import java.util.List;
+import java.util.function.BiConsumer;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -9,12 +10,21 @@ import org.bukkit.inventory.ItemStack;
 
 import com.snow.menu.Menu;
 import com.snow.menu.MenuView;
+import org.bukkit.inventory.meta.ItemMeta;
 
 /**
  * Interface for the Base Button Class.
  * Completely implemented by it and only used for Attributes
  */
 public interface IButton {
+	// Give the Button Function in form of a Lambda Expression or Function Reference
+	// will be executed when the Button is clicked
+	// example:   setFunction((player, view) -> player.sendMessage("clicked a button"));
+	IButton setClickFunction(BiConsumer<Player, MenuView> function);
+
+	// Setting the Button to be disabled makes not show in menus
+	IButton setDisabled(boolean disabled);
+
 	// Set whether the Button should be able to be moved in an EditableMenu
 	// Default is true
 	// Setting to false is the same as implementing ImmovableButton
@@ -27,6 +37,8 @@ public interface IButton {
 	IButton setClickDelay(int sameButton, int differentButton);
 
 	boolean isMovable();
+
+	boolean isDisabled();
 
 	// Button was clicked by a Player
 	// The Event is already cancelled and can be checked for clicktype etc.
@@ -85,10 +97,6 @@ public interface IButton {
 
 	void setType(Material type);
 
-	short getDurability();
-
-	void setDurability(short durability);
-
 	List<String> getLore();
 
 	void setLore(List<String> lore);
@@ -105,6 +113,10 @@ public interface IButton {
 	int getAmount();
 
 	void setAmount(int amount);
+
+	ItemMeta getItemMeta();
+
+	void setItemMeta(ItemMeta meta);
 
 	// Returns the actual item representing the Button
 	ItemStack getItem();

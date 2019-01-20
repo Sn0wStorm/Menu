@@ -3,6 +3,7 @@ package com.snow.menu.Buttons.Attributes;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -21,14 +22,22 @@ public class EditableButtonHandler {
 	public String[] suffix; // Uneditable text at the end
 	public String[] suffixCanEdit; // Additional uneditable text at the end, visible when player can edit button
 	public boolean loreHasCanEdit = false; // If the lore contains the suffixCanEdit right now
+	private Function<String, String> filter; // Filter for each edited Line
+	public int maxLines = 20;
 
 	// Lines of text, add a null element as page separator
 	// Text must be with & as color code for editing and then translated later
-	public List<String> text = new ArrayList<String>();
+	public List<String> text = new ArrayList<>();
 
 	public EditableButtonHandler(EditableButton b) {
 		this.b = b;
 		setDefaultSuffix();
+	}
+
+	// Set a Filter through that every line goes through after being edited
+	// return null if the line should be omitted
+	public void setEditFilter(Function<String, String> filter) {
+		this.filter = filter;
 	}
 
 	// Set the prefix and properly color translate it
@@ -45,6 +54,18 @@ public class EditableButtonHandler {
 			arr[i] = Button.loreColor(arr[i]);
 		}
 		suffix = arr;
+	}
+
+	public Function<String, String> getFilter() {
+		return filter;
+	}
+
+	public int getMaxLines() {
+		return maxLines;
+	}
+
+	public void setMaxLines(int maxLines) {
+		this.maxLines = maxLines;
 	}
 
 	public String[] getPrefix() {
@@ -92,7 +113,7 @@ public class EditableButtonHandler {
 		if (loreHasCanEdit && suffixCanEdit != null) size += suffixCanEdit.length;
 		if (size == 0) return;
 
-		List<String> lore = new ArrayList<String>(size);
+		List<String> lore = new ArrayList<>(size);
 		if (prefix != null) {
 			Collections.addAll(lore, prefix);
 		}
@@ -115,6 +136,9 @@ public class EditableButtonHandler {
 	// Creates editable Text from the Lore of the Item
 	public void initFromLore() {
 		this.text = b.getLore();
+		if (text == null) {
+			text = new ArrayList<>();
+		}
 	}
 
 	/*public ItemStack getEditable(ItemStack item) {
@@ -138,7 +162,7 @@ public class EditableButtonHandler {
 				if (suffixCanEdit != null && suffixCanEdit.length > 0) {
 					List<String> lore = b.getLore();
 					if (lore == null) {
-						lore = new ArrayList<String>();
+						lore = new ArrayList<>();
 					}
 					Collections.addAll(lore, suffixCanEdit);
 					b.setLore(lore);

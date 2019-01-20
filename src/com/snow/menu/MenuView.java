@@ -1,5 +1,6 @@
 package com.snow.menu;
 
+import com.snow.menu.Menus.Attributes.PagedMenu;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -41,7 +42,7 @@ public class MenuView implements InventoryHolder {
 
 	public void setBackMenu(MenuView backView) {
 		if (backView != null) {
-			while (backView.getMenu() instanceof NoBackMenu || backView.getMenu().isNoBack()) {
+			while (backView.getMenu().isNoBack()) {
 				backView = backView.getBackMenu();
 				if (backView == null) {
 					break;

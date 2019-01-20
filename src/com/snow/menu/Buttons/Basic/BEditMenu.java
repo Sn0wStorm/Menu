@@ -23,24 +23,12 @@ public class BEditMenu extends OnOffButton implements ImmovableButton {
 		super(type);
 	}
 
-	public BEditMenu(Material type, short durability) {
-		super(type, durability);
-	}
-
 	public BEditMenu(Material type, String name) {
 		super(type, name);
 	}
 
-	public BEditMenu(Material type, short durability, String name) {
-		super(type, durability, name);
-	}
-
 	public BEditMenu(Material type, String name, String... lore) {
 		super(type, name, lore);
-	}
-
-	public BEditMenu(Material type, short durability, String name, String... lore) {
-		super(type, durability, name, lore);
 	}
 
 	public BEditMenu(ItemStack itemOn, ItemStack itemOff) {
@@ -72,12 +60,12 @@ public class BEditMenu extends OnOffButton implements ImmovableButton {
 	}
 
 	@Override
-	public ItemStack getItem(Player player, MenuView view) {
+	public boolean shouldShowOn(Player player, MenuView view) {
 		if (currentMenu instanceof MEdit) {
 			MEdit menu = ((MEdit) currentMenu);
-			return getItem(menu.isEditing(player.getUniqueId()));
+			return menu.isEditing(player.getUniqueId());
 		}
-		return getItem();
+		return OFF;
 	}
 
 	@Override
@@ -90,13 +78,13 @@ public class BEditMenu extends OnOffButton implements ImmovableButton {
 
 	@Override
 	protected void initOnOff() {
-		setGlowing(true);
+		setGlowing(0, true);
 		initLoreDeAc();
 	}
 
 	@Override
 	protected void initLoreDeAc() {
-		addLore(0, "", "&8Klicken zum Bearbeiten");
-		addLore("&aBearbeitungmodus", "", "&8Klicken um den Bearbeitungsmodus zu verlassen");
+		addLore(1, "", "&8Klicken zum Bearbeiten");
+		addLore(0, "&aBearbeitungmodus", "", "&8Klicken um den Bearbeitungsmodus zu verlassen");
 	}
 }
