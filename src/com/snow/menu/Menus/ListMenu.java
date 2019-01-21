@@ -2,16 +2,23 @@ package com.snow.menu.Menus;
 
 import com.snow.menu.Buttons.Button;
 import com.snow.menu.Menus.Attributes.PagedMenuHandler;
-import com.snow.menu.P;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.IntFunction;
+
+/*
+  A Paged Menu that is automatically populated from a Collection of any Object E
+  It uses the given Function to get a Button for each Object
+  It will display a Button for each Object in the Collection
+  The Menu can be set to auto update from the Collection after a certain time
+ */
 
 public class ListMenu<E> extends FullyPagedMenu {
 
@@ -25,6 +32,10 @@ public class ListMenu<E> extends FullyPagedMenu {
 	private long lastUpdate = 0;
 	private boolean shouldRebuild = false;
 
+	/*
+	  ListMenu that uses no Collection but rather is populated by
+	  a function that returns a Button given the index
+	 */
 	public ListMenu(String name, IntFunction<Button> function) {
 		this(name, false);
 		if (function == null) {
@@ -34,6 +45,11 @@ public class ListMenu<E> extends FullyPagedMenu {
 		rebuildAll();
 	}
 
+	/*
+	  ListMenu that is populated using the given collection and function
+	  For each Element E of the collection, the function is called and should return
+	  the corresponding Button
+	 */
 	public ListMenu(String name, Collection<E> collection, Function<E, Button> function) {
 		this(name, false);
 		if (function == null) {
@@ -47,6 +63,9 @@ public class ListMenu<E> extends FullyPagedMenu {
 		rebuildAll();
 	}
 
+	/*
+	  The same as above but the function gets the Element E and its index as arguments
+	 */
 	public ListMenu(String name, Collection<E> collection, BiFunction<E, Integer, Button> function) {
 		this(name,  false);
 		if (function == null) {
@@ -60,17 +79,26 @@ public class ListMenu<E> extends FullyPagedMenu {
 		rebuildAll();
 	}
 
+	/*
+	  List Menu without a populator so it will be Empty
+	  init determines if the PageHandler should be initialized
+	  Without overriding anything in this Class, this will be functionally the same as FullyPagedMenu
+	 */
 	public ListMenu(String name, boolean init) {
 		super(name, init);
 	}
 
+	/*
+	  Creates a ListMenu with a Button for each ItemStack in the given Collection
+	 */
 	public static ListMenu<ItemStack> itemList(String name, Collection<ItemStack> itemStacks) {
 		return new ListMenu<>(name, itemStacks, i -> new Button(i));
 	}
 
 	// This is called whenever a new Page has to be created by the Menu
-	// Override this to return a new Menu Page of your class
+	// You can Override this to return a new Menu Page of your class
 	// If you want all the Pages in the Menu to be of your class
+	// This should only be necessary if you override Methods that need to apply to every Page
 	@Override
 	public ListMenu creatingNewMenuPage() {
 		return new ListMenu(this.getName(), false);
@@ -87,6 +115,8 @@ public class ListMenu<E> extends FullyPagedMenu {
 		return null;
 	}
 
+	// Add a Button to the Menu that is not included in the Collection
+	// This is the same as addButton() but it takes an element E and applies the function
 	public boolean addNonListButton(E obj) {
 		if (function != null) {
 			return super.addButton(function.apply(obj));
@@ -94,14 +124,19 @@ public class ListMenu<E> extends FullyPagedMenu {
 		return false;
 	}
 
-	public boolean addNonListButton(E obj, int slot) {
-		return super.addButton(applyFunction(obj, slot));
+	// Add a Button to the Menu that is not included in the Collection
+	// This is the same as addButton() but it takes an element E and applies the function
+	// The index has to be given if the function needs an index as argument
+	public boolean addNonListButton(E obj, int index) {
+		return super.addButton(applyFunction(obj, index));
 	}
 
+	// Get The underlying List that this Menu is populated from
 	public Collection<E> getList() {
 		return collection;
 	}
 
+	// Set The underlying List that this Menu is populated from
 	public void setList(Collection<E> collection) {
 		this.collection = collection;
 	}
@@ -114,10 +149,12 @@ public class ListMenu<E> extends FullyPagedMenu {
 		this.autoUpdate = autoUpdate;
 	}
 
+	// Update Interval in seconds
 	public int getUpdateInterval() {
 		return updateInterval;
 	}
 
+	// Update Interval in seconds
 	public void setUpdateInterval(int updateInterval) {
 		this.updateInterval = updateInterval;
 	}
@@ -151,12 +188,17 @@ public class ListMenu<E> extends FullyPagedMenu {
 	}
 
 	public void rebuildAll() {
+		clear(false);
 		if (intFunction != null) {
 			init(intFunction);
 		} else {
 			init(collection, function, biFunction);
 		}
 		//P.p.log("Rebuilt a Menu");
+	}
+
+	public void rebuildAllNextOpen() {
+		setShouldRebuild(true);
 	}
 
 	private void init(IntFunction<Button> function) {
@@ -210,10 +252,9 @@ public class ListMenu<E> extends FullyPagedMenu {
 		PagedMenuHandler.init(pages.toArray(new ListMenu[0]));
 	}
 
-	public void rebuildAllNextOpen() {
-		setShouldRebuild(true);
-	}
-
+	// Refresh a Button from the List at the specified index
+	// The Collection this menu is updating from must be a List
+	// This also works on ListMenus without a Collection using the index Function
 	public void refreshButton(int index) {
 		Button b = null;
 		if (intFunction != null) {
@@ -224,29 +265,34 @@ public class ListMenu<E> extends FullyPagedMenu {
 				b = applyFunction(e, index);
 			}
 		} else {
-			P.p.log("Tried to refresh button in non List");
-			return;
+			throw new IllegalStateException("Tried to refresh button in non-List: " + collection.getClass().getSimpleName());
 		}
 		super.removeButton(calcSlot(index));
 		super.addButton(b);
 		updateButton(b);
 	}
 
+	// Refresh a certain Button from the List
+	// The Collection this menu is updating from must be a List
 	public void refreshButton(E obj) {
 		if (collection instanceof List) {
 			int index = ((List<E>) collection).indexOf(obj);
-			int slot = calcSlot(index);
-			super.removeButton(slot);
-			if (obj != null) {
-				super.addButton(applyFunction(obj, index));
-				updateSlot(slot);
+			if (index >= 0) {
+				int slot = calcSlot(index);
+				super.removeButton(slot);
+				if (obj != null) {
+					super.addButton(applyFunction(obj, index));
+					updateSlot(slot);
+				}
+			} else {
+				throw new NoSuchElementException("Tried to refresh Button thats not in the List of this ListMenu");
 			}
 		} else {
-			P.p.log("Tried to refresh button in non List");
+			throw new IllegalStateException("Tried to refresh button in non-List: " + collection.getClass().getSimpleName());
 		}
 	}
 
-	// We dont count the Menu Top Bar, so for each new page we need to add 9 to the slot
+	// We dont count the Menu Top Bar, so for each new page we need to add 9 to the index
 	protected int calcSlot(int index) {
 		int add = 1 + (int) ( ((float) index) / 54);
 		return index + (add * 9);

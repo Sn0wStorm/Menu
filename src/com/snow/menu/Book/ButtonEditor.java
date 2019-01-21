@@ -1,17 +1,16 @@
-package com.snow.menu;
+package com.snow.menu.Book;
+
+import com.snow.menu.Buttons.Attributes.EditableButton;
+import com.snow.menu.Buttons.Attributes.EditableButtonHandler;
+import com.snow.menu.Buttons.Button;
+import com.snow.menu.MenuView;
+import com.snow.menu.P;
+import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerEditBookEvent;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
-
-import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerEditBookEvent;
-
-import com.snow.menu.Book.EditableBookText;
-import com.snow.menu.Buttons.Attributes.EditableButton;
-import com.snow.menu.Buttons.Attributes.EditableButtonHandler;
-import com.snow.menu.Buttons.Button;
 
   /*
     Uses Book Text to edit an EditableButton
@@ -32,10 +31,10 @@ public class ButtonEditor extends EditableBookText {
 	@Override
 	public void onEdit(PlayerEditBookEvent event, List<String> pages) {
 		P.p.getLogger().info("Edited");
-		for (String page : pages) {
+		/*for (String page : pages) {
 			P.p.getLogger().warning("page");
 			P.p.getLogger().warning(page);
-		}
+		}*/
 		List<String> lore = new ArrayList<String>();
 
 		addPrefix(lore);

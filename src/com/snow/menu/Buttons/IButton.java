@@ -3,6 +3,7 @@ package com.snow.menu.Buttons;
 import java.util.List;
 import java.util.function.BiConsumer;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -92,6 +93,8 @@ public interface IButton {
 	String getName();
 
 	void setName(String name);
+
+	void colorName(ChatColor color);
 
 	Material getType();
 

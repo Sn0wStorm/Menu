@@ -250,6 +250,17 @@ public class Menu implements IMenu {
 		return false;
 	}
 
+	// Remove all buttons in this Menu
+	// If alsoBasic is true, also remove the Top Bar where the Home and Back buttons might be
+	@Override
+	public void clear(boolean withTopRow) {
+		for (int i = withTopRow ? 0 : 9; i < buttons.length; i++) {
+			if (buttons[i] != null) {
+				removeButton(i);
+			}
+		}
+	}
+
 	// Returns true if the Menu contains the given Button
 	@Override
 	public boolean contains(Button button) {

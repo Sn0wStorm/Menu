@@ -8,7 +8,7 @@ import java.util.function.Function;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import com.snow.menu.ButtonEditor;
+import com.snow.menu.Book.ButtonEditor;
 import com.snow.menu.Buttons.Button;
 import com.snow.menu.MenuView;
 import com.snow.menu.P;
@@ -210,8 +210,8 @@ public class EditableButtonHandler {
 			}
 		}
 
-		Bukkit.getLogger().info(" --- ");
-		Bukkit.getLogger().warning(pagebuilder.toString());
+		//Bukkit.getLogger().info(" --- ");
+		//Bukkit.getLogger().warning(pagebuilder.toString());
 
 		edit.addPage(pagebuilder.toString());
 	}

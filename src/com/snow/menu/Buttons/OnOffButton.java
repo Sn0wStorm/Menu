@@ -52,12 +52,20 @@ public abstract class OnOffButton extends MultiStateButton {
 		return on ? getOn() : getOff();
 	}
 
+	public String getOnName() {
+		return "An";
+	}
+
+	public String getOffName() {
+		return "Aus";
+	}
+
 	@Override
 	public int showState(Player player, MenuView view) {
 		return shouldShowOn(player, view) ? 0 : 1;
 	}
 
-	// Return true if the ON button should be showed to the Playyer
+	// Return true if the ON button should be showed to the Player
 	// Return false if the OFF button ...
 	public abstract boolean shouldShowOn(Player player, MenuView view);
 
@@ -69,8 +77,8 @@ public abstract class OnOffButton extends MultiStateButton {
 			name = getType().name();
 		}
 		name = ChatColor.stripColor(name);
-		setName(0, "&a" + name);
-		setName(1, "&c" + name);
+		setName(0, name + " §7[§a"+getOnName()+"§7]");
+		setName(1, name + " §7[§c"+getOffName()+"§7]");
 		setGlowing(0, true);
 		initLoreDeAc();
 	}

@@ -129,7 +129,7 @@ public class BookListener implements Listener {
 
 	@EventHandler(ignoreCancelled = true)
 	public void onBookEdit(PlayerEditBookEvent event) {
-		P.p.log("edited book");
+		//P.p.log("edited book");
 		if (ItemReplacer.isEmpty()) {
 			return;
 		}

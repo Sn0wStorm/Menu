@@ -57,6 +57,10 @@ public interface IMenu extends Iterable<Button> {
 	// Remove a Button from this menu, returns true if successful
 	boolean removeButton(Button button);
 
+	// Remove all buttons in this Menu
+	// If alsoBasic is true, also remove the Top Bar where the Home and Back buttons might be
+	void clear(boolean withTopRow);
+
 	// Returns true if the Menu contains the given Button
 	boolean contains(Button button);
 

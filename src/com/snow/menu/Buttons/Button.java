@@ -17,6 +17,8 @@ import com.snow.menu.Menu;
 import com.snow.menu.MenuView;
 import com.snow.menu.P;
 
+import javax.annotation.OverridingMethodsMustInvokeSuper;
+
   /*
     A Button that can be added to a Menu
     can be extended to add functionality other than showing text
@@ -186,11 +188,14 @@ public class Button implements IButton {
 
 	// Called when the Button is removed from the Menu
 	@Override
+	@OverridingMethodsMustInvokeSuper
 	public void onRemoving() {
+		setCurrentMenu(null, 0);
 	}
 
 	// Called when the Button is being added to a Menu
 	@Override
+	@OverridingMethodsMustInvokeSuper
 	public void onAdding(Menu menu, int slot) {
 		setCurrentMenu(menu, slot);
 	}
@@ -245,6 +250,7 @@ public class Button implements IButton {
 		item.setItemMeta(meta);
 	}
 
+	@Override
 	public void colorName(ChatColor color) {
 		if (color != null) {
 			ItemMeta meta = item.getItemMeta();

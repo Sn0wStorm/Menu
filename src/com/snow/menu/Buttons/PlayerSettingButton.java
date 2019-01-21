@@ -54,6 +54,14 @@ public class PlayerSettingButton extends OnOffButton {
 		return settings.get(player);
 	}
 
+	public Map<UUID, AtomicBoolean> getSettingsMap() {
+		return settings;
+	}
+
+	public void setSettingsMap(Map<UUID, AtomicBoolean> settings) {
+		this.settings = settings;
+	}
+
 	@Override
 	public boolean canSee(Player player, MenuView view) {
 		return (showIfAbsent || settings.containsKey(player.getUniqueId()));
