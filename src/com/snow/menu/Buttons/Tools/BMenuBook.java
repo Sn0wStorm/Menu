@@ -65,6 +65,9 @@ public class BMenuBook extends Button {
 			if (item.hasItemMeta()) {
 				ItemMeta meta = item.getItemMeta();
 				if (meta != null && meta.hasDisplayName() && meta.getDisplayName().equals("§7Menü Buch")) {
+					if (item.getAmount() > 1) {
+						item.setAmount(1);
+					}
 					return true;
 				}
 			}

@@ -16,7 +16,7 @@ import org.bukkit.inventory.ItemStack;
 /*
   An Empty Menu that tells the Player to select one item out of his own inventory
   The Item will stay there and not be touched.
-  The Selected Items Type is given to the Registered Selector as Button
+  The Selected Item is given to the Registered Selector as Button
  */
 
 public class SelectPlayerItemMenu extends Menu implements SelectorMenu {
@@ -56,7 +56,7 @@ public class SelectPlayerItemMenu extends Menu implements SelectorMenu {
 			if (event.isLeftClick()) {
 				ItemStack currentItem = event.getCurrentItem();
 				if (currentItem != null && currentItem.getType() != Material.AIR) {
-					SelectorMenu.getSelector(event.getWhoClicked().getUniqueId()).selected(event.getWhoClicked().getUniqueId(), new Button(currentItem.getType()));
+					SelectorMenu.getSelector(event.getWhoClicked().getUniqueId()).selected(event.getWhoClicked().getUniqueId(), new Button(currentItem.clone()));
 				}
 			}
 		}

@@ -10,13 +10,14 @@ import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
+import com.snow.menu.Buttons.Basic.BEmptyTopTile;
+import com.snow.menu.Buttons.Button;
 import com.snow.menu.Menu;
 import org.bukkit.entity.Player;
 
 import com.snow.menu.Buttons.Basic.BNextPage;
 import com.snow.menu.Buttons.Basic.BPrevPage;
 import com.snow.menu.MenuView;
-import com.snow.menu.P;
 
 public class PagedMenuHandler<M extends PagedMenu> {
 	private static Map<UUID, Set<MenuView>> cache = new HashMap<>();
@@ -33,10 +34,10 @@ public class PagedMenuHandler<M extends PagedMenu> {
 			menu.setMenuPages(h);
 			menu.showBasicButtons(true);
 			if (i < menus.length - 1) {
-				menu.addButton(new BNextPage(h), BNextPage.getDefaultRow(), BNextPage.getDefaultColumn());
+				menu.addButton(new BNextPage(h), BNextPage.getDefaultSlot());
 			}
 			if (i > 0) {
-				menu.addButton(new BPrevPage(h), BPrevPage.getDefaultRow(), BPrevPage.getDefaultColumn());
+				menu.addButton(new BPrevPage(h), BPrevPage.getDefaultSlot());
 			}
 		}
 	}
@@ -156,24 +157,38 @@ public class PagedMenuHandler<M extends PagedMenu> {
 	}
 
 	public void addPage(M... menus) {
+		if (menus.length <= 0) return;
+		int startIndex = getLast().getPageIndex();
 		for (int i = 0; i < menus.length; i++) {
 			M pmenu = menus[i];
-			PagedMenuHandler<M> h = new PagedMenuHandler<>(pages, pmenu, i + index + 1);
+			PagedMenuHandler<M> h = new PagedMenuHandler<>(pages, pmenu, i + startIndex + 1);
 			pages.add(h);
 			pmenu.setMenuPages(h);
+			pmenu.showBasicButtons(true);
 		}
-		updateIndex(index);
+		updateIndexes();
+	}
+
+	public void removePageIfEmpty() {
+		int removeToIndex = getMenu().isShowingBasicButtons() ? 9 : 0;
+		Button[] buttons = getMenu().getButtons();
+		for (int i = buttons.length - 1; i >= removeToIndex; i--) {
+			if (buttons[i] != null) {
+				return;
+			}
+		}
+		removePage();
 	}
 
 	public void removePage() {
 		pages.remove(index);
-		updateIndex(index);
+		updateIndexes();
 	}
 
 	public void removePage(int index) {
 		if (index >= 0 && pages.size() > index) {
 			pages.remove(index);
-			updateIndex(index);
+			updateIndexes();
 		}
 	}
 
@@ -181,11 +196,24 @@ public class PagedMenuHandler<M extends PagedMenu> {
 		return other instanceof PagedMenu && ((PagedMenu) other).getMenuPages().pages == pages;
 	}
 
-	private void updateIndex(int startIndex) {
-		int size = pages.size();
-		while (size > startIndex) {
-			pages.get(startIndex).index = startIndex;
-			startIndex++;
+	private void updateIndexes() {
+		int i = 0;
+		for (PagedMenuHandler<M> page : pages) {
+			page.index = i;
+
+			if (i < pages.size() - 1) {
+				page.getMenu().addButton(new BNextPage(page), BNextPage.getDefaultSlot());
+			} else {
+				page.getMenu().addButton(new BEmptyTopTile(), BNextPage.getDefaultSlot());
+			}
+			page.getMenu().updateSlot(BNextPage.getDefaultSlot());
+			if (i > 0) {
+				page.getMenu().addButton(new BPrevPage(page), BPrevPage.getDefaultSlot());
+			} else {
+				page.getMenu().addButton(new BEmptyTopTile(), BPrevPage.getDefaultSlot());
+			}
+			page.getMenu().updateSlot(BPrevPage.getDefaultSlot());
+			i++;
 		}
 	}
 }

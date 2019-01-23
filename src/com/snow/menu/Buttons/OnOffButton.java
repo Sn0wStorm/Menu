@@ -9,7 +9,8 @@ import org.bukkit.inventory.ItemStack;
 /*
   A Stated Button with only one additional state: off
   Will always have the two items getItem(0) and getItem(1)
-  The Main item will have a green name, the other a red name
+  Item 0 is ON state and item 1 is OFF state
+  [An] or [Aus] is appended to the name in green/red
   Lore depending on the on/off state will be added
 
   Need to Override shouldShowOn to return which button to show
@@ -68,6 +69,7 @@ public abstract class OnOffButton extends MultiStateButton {
 	// Return true if the ON button should be showed to the Player
 	// Return false if the OFF button ...
 	public abstract boolean shouldShowOn(Player player, MenuView view);
+
 
 	// Methods below can be overridden to initialize different On Off Names and Lore
 

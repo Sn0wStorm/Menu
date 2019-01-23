@@ -21,17 +21,14 @@ public class BNextPage extends Button {
 
 	// Add This Button to the default slot in the menu
 	public BNextPage addToMenu(Menu menu) {
-		menu.addButton(this, getDefaultRow(), getDefaultColumn());
+		menu.addButton(this, getDefaultSlot());
 		return this;
 	}
 
-	public static int getDefaultColumn() {
+	public static int getDefaultSlot() {
 		return 8;
 	}
 
-	public static int getDefaultRow() {
-		return 0;
-	}
 
 	@Override
 	public void onClick(InventoryClickEvent event, MenuView view) {

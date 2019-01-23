@@ -1,8 +1,5 @@
 package com.snow.menu.Book;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -14,13 +11,26 @@ import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
-import org.bukkit.event.player.*;
+import org.bukkit.event.inventory.PrepareItemCraftEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerEditBookEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemHeldEvent;
+import org.bukkit.event.player.PlayerKickEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.meta.BookMeta;
+import org.bukkit.inventory.meta.ItemMeta;
 
-import com.snow.menu.P;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BookListener implements Listener {
+
+
 
 	@EventHandler
 	public void onInteract(PlayerInteractEvent event) {
@@ -68,6 +78,27 @@ public class BookListener implements Listener {
 		Location to = event.getTo();
 		if (Math.abs(from.getYaw() - to.getYaw()) > 4 || Math.abs(from.getPitch() - to.getPitch()) > 4) {
 			illegalAction(event.getPlayer());
+		}
+	}
+
+	// Disallow crafting with the MenuBook and the Book that is used by the EditableBookText in case someone can get it
+	@EventHandler
+	public void onPrepareCraft(PrepareItemCraftEvent event) {
+		Recipe recipe = event.getRecipe();
+		if (recipe == null) return;
+		if (recipe.getResult().getType() == Material.BOOKSHELF) {
+			for (ItemStack i : event.getInventory().getMatrix()) {
+				if (i != null && i.getType() == Material.BOOK && i.hasItemMeta()) {
+					ItemMeta itemMeta = i.getItemMeta();
+					if (itemMeta.hasDisplayName()) {
+						String displayName = itemMeta.getDisplayName();
+						if (displayName.equals("§fRechtsklick") || displayName.equals("Rechtsklick") || displayName.equals("§7Menü Buch") || displayName.equals("Menü Buch")) {
+							event.getInventory().setResult(new ItemStack(Material.AIR));
+							return;
+						}
+					}
+				}
+			}
 		}
 	}
 

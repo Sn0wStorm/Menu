@@ -194,7 +194,7 @@ public class P extends JavaPlugin {
 	}
 
 	public void log(String msg) {
-		this.msg(Bukkit.getConsoleSender(), "[LostMenu] " + msg);
+		this.msg(Bukkit.getConsoleSender(), "[Menu] " + msg);
 	}
 
 	public String color(String msg) {

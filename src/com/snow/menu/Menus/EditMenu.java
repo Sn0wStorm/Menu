@@ -17,15 +17,15 @@ import com.snow.menu.Menus.Attributes.SaveableMenuHandler;
 import com.snow.menu.P;
 
 /*
-  Generic Editable Menu that creates an edit button that toggles the edit mode
+  Generic Editable and Saveable Menu that creates an edit button that toggles the edit mode
  */
-public class MEdit extends Menu implements EditableMenu, SaveableMenu {
+public class EditMenu extends Menu implements EditableMenu, SaveableMenu {
 
 	private EditableMenuHandler edit = new EditableMenuHandler(this);
 	private SaveableMenuHandler save = new SaveableMenuHandler(this);
 	private Set<UUID> editing = new HashSet<UUID>();
 
-	public MEdit(String name, int size) {
+	public EditMenu(String name, int size) {
 		super(name, size);
 		addButton(new BEditMenu(), BEditMenu.getDefaultSlot());
 	}
@@ -52,6 +52,7 @@ public class MEdit extends Menu implements EditableMenu, SaveableMenu {
 	public void onLoad() {
 	}
 
+	@Override
 	public void setEditing(UUID uuid, boolean editing) {
 		if (editing) {
 			this.editing.add(uuid);
@@ -62,6 +63,7 @@ public class MEdit extends Menu implements EditableMenu, SaveableMenu {
 		}
 	}
 
+	@Override
 	public boolean isEditing(UUID uuid) {
 		return editing.contains(uuid);
 	}

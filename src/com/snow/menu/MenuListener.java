@@ -50,6 +50,7 @@ public class MenuListener implements Listener {
 			if (event.getCurrentItem() != null) {
 				if (event.getWhoClicked() != null && event.getWhoClicked() instanceof Player) {
 					if (BMenuBook.isMenuBook(event.getCurrentItem())) {
+						P.p.log(event.getWhoClicked().getName() + " is opening the Main Menu");
 						P.p.getPluginRegistry().getMainMenu().show((Player) event.getWhoClicked());
 						return;
 					}
@@ -128,6 +129,7 @@ public class MenuListener implements Listener {
 		if (event.hasItem() && (event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK))) {
 			if (BMenuBook.isMenuBook(event.getItem())) {
 				event.setCancelled(true);
+				P.p.log(event.getPlayer().getName() + " is opening the Main Menu");
 				P.p.getPluginRegistry().getMainMenu().show(event.getPlayer());
 			}
 		}

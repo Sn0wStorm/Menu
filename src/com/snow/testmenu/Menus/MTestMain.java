@@ -18,6 +18,8 @@ import com.snow.menu.Menus.Attributes.EditableMenuHandler;
 import com.snow.menu.Menus.Test.MEditTest;
 import com.snow.menu.P;
 
+import java.util.UUID;
+
 public class MTestMain extends Menu implements EditableMenu {
 
 	private EditableMenuHandler edit;
@@ -62,6 +64,16 @@ public class MTestMain extends Menu implements EditableMenu {
 	@Override
 	public EditableMenuHandler getEditHandler() {
 		return edit;
+	}
+
+	@Override
+	public void setEditing(UUID uuid, boolean editing) {
+
+	}
+
+	@Override
+	public boolean isEditing(UUID uuid) {
+		return false;
 	}
 
 	/*@Override

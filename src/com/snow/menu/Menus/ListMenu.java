@@ -1,6 +1,7 @@
 package com.snow.menu.Menus;
 
 import com.snow.menu.Buttons.Button;
+import com.snow.menu.Buttons.Tools.ButtonCreator;
 import com.snow.menu.Menus.Attributes.PagedMenuHandler;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -18,6 +19,7 @@ import java.util.function.IntFunction;
   It uses the given Function to get a Button for each Object
   It will display a Button for each Object in the Collection
   The Menu can be set to auto update from the Collection after a certain time
+  Shows Top Bar with Basic Buttons by default
  */
 
 public class ListMenu<E> extends FullyPagedMenu {
@@ -35,6 +37,7 @@ public class ListMenu<E> extends FullyPagedMenu {
 	/*
 	  ListMenu that uses no Collection but rather is populated by
 	  a function that returns a Button given the index
+	  Will continue adding Buttons until the function returns null
 	 */
 	public ListMenu(String name, IntFunction<Button> function) {
 		this(name, false);
@@ -89,9 +92,17 @@ public class ListMenu<E> extends FullyPagedMenu {
 	}
 
 	/*
+	  Creates a ListMenu from a Collection of ButtonCreators
+	  A ButtonCreator is an object that can be directly created into a Button
+	 */
+	public static ListMenu<ButtonCreator> withButtonCreators(String name, Collection<ButtonCreator> buttonCreators) {
+		return new ListMenu<>(name, buttonCreators, (bc, index) -> bc.createButton(index));
+	}
+
+	/*
 	  Creates a ListMenu with a Button for each ItemStack in the given Collection
 	 */
-	public static ListMenu<ItemStack> itemList(String name, Collection<ItemStack> itemStacks) {
+	public static ListMenu<ItemStack> withItemStacks(String name, Collection<ItemStack> itemStacks) {
 		return new ListMenu<>(name, itemStacks, i -> new Button(i));
 	}
 
@@ -293,8 +304,12 @@ public class ListMenu<E> extends FullyPagedMenu {
 	}
 
 	// We dont count the Menu Top Bar, so for each new page we need to add 9 to the index
-	protected int calcSlot(int index) {
-		int add = 1 + (int) ( ((float) index) / 54);
-		return index + (add * 9);
+	public static int calcSlot(int index) {
+		// On each page we have, due to the Menu Bar, 45 usable slots.
+		// So for every 45 in the index we need a new page
+		// We have 1 page at the start + another for each 45 items
+		int pages = 1 + (int) ( ((float) index) / 45f );
+		// So add 9 slots (menubar) to the index for every page we have
+		return index + (pages * 9);
 	}
 }

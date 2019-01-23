@@ -1,38 +1,25 @@
 package com.snow.menu.Buttons.Basic;
 
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
-
 import com.snow.menu.Buttons.Attributes.ImmovableButton;
 import com.snow.menu.Buttons.OnOffButton;
 import com.snow.menu.Menu;
 import com.snow.menu.MenuView;
 import com.snow.menu.Menus.Attributes.EditableMenu;
-import com.snow.menu.Menus.MEdit;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
 
 public class BEditMenu extends OnOffButton implements ImmovableButton {
 
+	public static final int EDITING = 0;
+	public static final int EDIT = 1;
+	public static final int HIDDEN = 2;
+
 	public BEditMenu() {
-		super(Material.BRICKS, "Menü Bearbeiten");
-		getOn().setType(Material.BRICK);
-	}
-
-	public BEditMenu(Material type) {
-		super(type);
-	}
-
-	public BEditMenu(Material type, String name) {
-		super(type, name);
-	}
-
-	public BEditMenu(Material type, String name, String... lore) {
-		super(type, name, lore);
-	}
-
-	public BEditMenu(ItemStack itemOn, ItemStack itemOff) {
-		super(itemOn, itemOff);
+		super(Material.BRICK, "Menü Bearbeiten");
+		setType(EDIT, Material.BRICKS);
+		addStates(1);
+		setItem(HIDDEN, new BEmptyTopTile().getItem());
 	}
 
 	@Override
@@ -52,17 +39,40 @@ public class BEditMenu extends OnOffButton implements ImmovableButton {
 
 	@Override
 	public void onClick(InventoryClickEvent event, MenuView view) {
-		if (view.getMenu() instanceof MEdit) {
-			MEdit menu = ((MEdit) view.getMenu());
+		if (view.getMenu() instanceof EditableMenu) {
+			EditableMenu menu = ((EditableMenu) view.getMenu());
+			if (!menu.canEdit(((Player) event.getWhoClicked()))) {
+				return;
+			}
 			menu.setEditing(event.getWhoClicked().getUniqueId(), !menu.isEditing(event.getWhoClicked().getUniqueId()));
 			menu.update();
 		}
 	}
 
 	@Override
+	public int showState(Player player, MenuView view) {
+		Menu menu = view.getMenu();
+		if (menu instanceof EditableMenu) {
+			if (!((EditableMenu) menu).canEdit(player)) {
+				return HIDDEN;
+			} else {
+				return ((EditableMenu) menu).isEditing(player.getUniqueId()) ? EDITING : EDIT;
+			}
+		} else {
+			return menu.canAdmin(player) ? EDIT : HIDDEN;
+		}
+	}
+
+	@Override
 	public boolean shouldShowOn(Player player, MenuView view) {
-		if (currentMenu instanceof MEdit) {
-			MEdit menu = ((MEdit) currentMenu);
+		// Never called as we override the showState() Method
+		return false;
+	}
+
+	/*@Override
+	public boolean shouldShowOn(Player player, MenuView view) {
+		if (currentMenu instanceof EditMenu) {
+			EditMenu menu = ((EditMenu) currentMenu);
 			return menu.isEditing(player.getUniqueId());
 		}
 		return OFF;
@@ -80,7 +90,7 @@ public class BEditMenu extends OnOffButton implements ImmovableButton {
 	protected void initOnOff() {
 		setGlowing(0, true);
 		initLoreDeAc();
-	}
+	}*/
 
 	@Override
 	protected void initLoreDeAc() {

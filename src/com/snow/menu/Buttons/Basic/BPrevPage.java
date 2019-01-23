@@ -21,16 +21,12 @@ public class BPrevPage extends Button {
 
 	// Add This Button to the default slot in the menu
 	public BPrevPage addToMenu(Menu menu) {
-		menu.addButton(this, getDefaultRow(), getDefaultColumn());
+		menu.addButton(this, getDefaultSlot());
 		return this;
 	}
 
-	public static int getDefaultColumn() {
+	public static int getDefaultSlot() {
 		return 7;
-	}
-
-	public static int getDefaultRow() {
-		return 0;
 	}
 
 	@Override

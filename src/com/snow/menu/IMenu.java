@@ -7,6 +7,8 @@ import com.snow.menu.Buttons.Button;
 import com.snow.menu.Buttons.IButton;
 import com.snow.menu.Util.ButtonIterator;
 
+import java.util.List;
+
 /**
  * Interface for the Base Menu Class.
  * Completely implemented by it and only used for Attributes
@@ -19,6 +21,8 @@ public interface IMenu extends Iterable<Button> {
 	IMenu setNoBack(boolean noBack);
 
 	boolean isNoBack();
+
+	boolean isShowingBasicButtons();
 
 	String getName();
 
@@ -99,6 +103,15 @@ public interface IMenu extends Iterable<Button> {
 	// Returns true for OP players by default
 	boolean canAdmin(Player player);
 
+	// Get the last time one of the update methods was called
+	// equivalent to the last time a change was made to the menu which was updated to viewing players
+	// used by cached views to check if they need to update
+	// time in millis
+	long getLastChangeTime();
+
+	// Set the Last Change time to the current time
+	void resetLastChangeTime();
+
 	// Updates the Menu to players that are having the menu open currently at the moment
 	// Needs to be called after big changes were made that should be immediately visible
 	void update();
@@ -112,6 +125,8 @@ public interface IMenu extends Iterable<Button> {
 	void updateSlot(int slot);
 
 	<T extends IButton> ButtonIterator<T> iterator(Class<T> clazz);
+
+	List<MenuView> getOpenViews();
 
 	// Returns true if any Player is currently viewing this Menu
 	public boolean hasOpenViews();

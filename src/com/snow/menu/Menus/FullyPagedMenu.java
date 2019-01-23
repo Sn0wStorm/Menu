@@ -1,7 +1,5 @@
 package com.snow.menu.Menus;
 
-import com.snow.menu.Buttons.Basic.BNextPage;
-import com.snow.menu.Buttons.Basic.BPrevPage;
 import com.snow.menu.Buttons.Button;
 import com.snow.menu.Menu;
 import com.snow.menu.MenuView;
@@ -10,7 +8,6 @@ import com.snow.menu.Menus.Attributes.PagedMenuHandler;
 import org.bukkit.entity.Player;
 
 import javax.annotation.OverridingMethodsMustInvokeSuper;
-import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
@@ -19,6 +16,7 @@ import java.util.stream.Stream;
   A Menu with Pages that is fully integrated as Menu.
   Adding and removing Buttons will create and remove Pages if needed
   Most operations on the First Page are modified to work across on all pages
+  Shows Top Bar with Basic Buttons by default
  */
 
 public class FullyPagedMenu extends Menu implements PagedMenu {
@@ -100,8 +98,8 @@ public class FullyPagedMenu extends Menu implements PagedMenu {
 			}
 		}
 		FullyPagedMenu m = creatingNewMenuPage();
-		m.addButtonThisPage(button);
 		getMenuPages().addPage(m);
+		m.addButtonThisPage(button);
 		return true;
 	}
 
@@ -163,9 +161,7 @@ public class FullyPagedMenu extends Menu implements PagedMenu {
 			} else {
 				Button b = p.getMenu().removeButtonThisPage(slot);
 				if (b != null) {
-					if (p.getMenu().stream().noneMatch((Objects::nonNull))) {
-						p.removePage();
-					}
+					p.removePageIfEmpty();
 				}
 				return b;
 			}
@@ -184,9 +180,7 @@ public class FullyPagedMenu extends Menu implements PagedMenu {
 		}
 		for (PagedMenuHandler<FullyPagedMenu> p : getMenuPages().allPages()) {
 			if (p.getMenu().removeButtonThisPage(button)) {
-				if (p.getMenu().stream().noneMatch((Objects::nonNull))) {
-					p.removePage();
-				}
+				p.removePageIfEmpty();
 				return true;
 			}
 		}
@@ -259,7 +253,7 @@ public class FullyPagedMenu extends Menu implements PagedMenu {
 			if (slot >= p.getMenu().getRows() * 9) {
 				slot -= p.getMenu().getRows() * 9;
 			} else {
-				p.getMenu().updateSlot(slot);
+				p.getMenu().updateSlotThisPage(slot);
 				return;
 			}
 		}
@@ -278,14 +272,14 @@ public class FullyPagedMenu extends Menu implements PagedMenu {
 				throw new IllegalStateException("Paged Menu is not initialized");
 			}
 
-			Button b = getButton(BNextPage.getDefaultRow(), BNextPage.getDefaultColumn());
+			/*Button b = getButton(BNextPage.getDefaultRow(), BNextPage.getDefaultColumn());
 			if (b instanceof BNextPage) {
 				b.setLoreLine(0, "Seite " + (getMenuPages().getPageIndex() + 1) + "/" + getMenuPages().getNumPages());
 			}
 			b = getButton(BPrevPage.getDefaultRow(), BPrevPage.getDefaultColumn());
 			if (b instanceof BPrevPage) {
 				b.setLoreLine(0, "Seite " + (getMenuPages().getPageIndex() + 1) + "/" + getMenuPages().getNumPages());
-			}
+			}*/
 		}
 		return true;
 	}

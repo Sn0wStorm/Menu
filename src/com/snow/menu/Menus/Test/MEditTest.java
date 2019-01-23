@@ -4,10 +4,10 @@ import org.bukkit.Material;
 
 import com.snow.menu.Buttons.GlobalButton;
 import com.snow.menu.Buttons.GlobalEditableButton;
-import com.snow.menu.Menus.MEdit;
+import com.snow.menu.Menus.EditMenu;
 import com.snow.menu.P;
 
-public class MEditTest extends MEdit {
+public class MEditTest extends EditMenu {
 	public MEditTest(String name, int size) {
 		super(name, size);
 		showBasicButtons(true);

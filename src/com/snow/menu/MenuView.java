@@ -20,9 +20,11 @@ public class MenuView implements InventoryHolder {
 	private Menu menu;
 	private MenuView back; // Menu that opens when pressing the Back Button
 	private MenuView home; // Menu that opens when pressing the Home Button
+	private long lastChange; // Time of last update in this view from the menu
 
 	public MenuView(Menu menu) {
 		this.menu = menu;
+		lastChange = menu.getLastChangeTime();
 	}
 
 	@Override
@@ -62,6 +64,14 @@ public class MenuView implements InventoryHolder {
 		home = homeView;
 	}
 
+	public long getLastChangeTime() {
+		return lastChange;
+	}
+
+	public void setLastChangeTime(long lastChange) {
+		this.lastChange = lastChange;
+	}
+
 	// Show this prepared Menu to a player again
 	// Can only be shown to one player at a time!
 	// Should only be used to show the player a menu again, that he was already on (back button, etc)
@@ -71,6 +81,10 @@ public class MenuView implements InventoryHolder {
 			MenuListener.storeClosing(player.getUniqueId(), old);
 			old.getMenu().onClosingMenu(player, old, this);
 			old.closed();
+		}
+		if (menu.getLastChangeTime() > lastChange) {
+			P.p.log("Updating view cause of lastChange");
+			update(player);
 		}
 		menu.listOpenView(this);
 		menu.onOpeningMenu(player, this, false, old);
@@ -91,6 +105,7 @@ public class MenuView implements InventoryHolder {
 				inv.setItem(i, null);
 			}
 		}
+		lastChange = System.currentTimeMillis();
 	}
 
 	protected void closed() {

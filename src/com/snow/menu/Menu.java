@@ -1,25 +1,23 @@
 package com.snow.menu;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.stream.Stream;
-
+import com.snow.menu.Buttons.Basic.BBack;
+import com.snow.menu.Buttons.Basic.BEmptyTopTile;
+import com.snow.menu.Buttons.Basic.BHome;
+import com.snow.menu.Buttons.Button;
+import com.snow.menu.Buttons.IButton;
 import com.snow.menu.Menus.Attributes.NoBackMenu;
+import com.snow.menu.Util.ButtonIterator;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 
-import com.snow.menu.Buttons.Basic.BBack;
-import com.snow.menu.Buttons.Basic.BEmptyTopTile;
-import com.snow.menu.Buttons.Basic.BHome;
-import com.snow.menu.Buttons.Button;
-import com.snow.menu.Buttons.IButton;
-import com.snow.menu.Util.ButtonIterator;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.stream.Stream;
 
  /*
     A Menu where buttons can be added
@@ -32,9 +30,10 @@ public class Menu implements IMenu {
 	private int size; // Number of rows
 	private String name; // Name of the shown inventory
 	private Button[] buttons; // Array of all included buttons
-	private List<MenuView> currentViews = new ArrayList<MenuView>(); // MenuViews (players) that are currently viewing the menu
+	private List<MenuView> currentViews = new ArrayList<>(); // MenuViews (players) that are currently viewing the menu
 	private boolean showBasic; // If basic controls like home and back should be shown
 	private boolean noBack; // If this Menu cannot be reached via a Back Button
+	private long lastChange; // Last time something was changed/updated in this Menu, used to know if cached Views are still valid
 
 	public Menu(String name) {
 		this(name, 6);
@@ -83,6 +82,11 @@ public class Menu implements IMenu {
 	public Menu setNoBack(boolean noBack) {
 		this.noBack = noBack;
 		return this;
+	}
+
+	@Override
+	public boolean isShowingBasicButtons() {
+		return showBasic;
 	}
 
 	@Override
@@ -201,12 +205,7 @@ public class Menu implements IMenu {
 	// Returns an iterable that has an iterator() method or can simply be used in a foreach loop
 	@Override
 	public <T extends IButton> Iterable<T> getButtons(final Class<T> clazz) {
-		return new Iterable<T>() {
-			@Override
-			public Iterator<T> iterator() {
-				return Menu.this.iterator(clazz);
-			}
-		};
+		return () -> Menu.this.iterator(clazz);
 	}
 
 	public Stream<Button> stream() {
@@ -396,10 +395,26 @@ public class Menu implements IMenu {
 		return player.isOp();
 	}
 
+	// Get the last time one of the update methods was called
+	// equivalent to the last time a change was made to the menu which was updated to viewing players
+	// used by cached views to check if they need to update
+	// time in millis
+	@Override
+	public long getLastChangeTime() {
+		return lastChange;
+	}
+
+	// Set the Last Change time to the current time
+	@Override
+	public void resetLastChangeTime() {
+		lastChange = System.currentTimeMillis();
+	}
+
 	// Updates the Menu to players that are having the menu open currently
 	// Needs to be called after big changes were made that should be immediately visible
 	@Override
 	public void update() {
+		resetLastChangeTime();
 		if (!hasOpenViews()) return;
 
 		MenuView view;
@@ -430,6 +445,7 @@ public class Menu implements IMenu {
 	// Needs to be called after the Button was changed
 	@Override
 	public void updateButton(Button button) {
+		resetLastChangeTime();
 		if (!hasOpenViews()) return;
 
 		for (int i = 0; i < buttons.length; i++) {
@@ -444,6 +460,7 @@ public class Menu implements IMenu {
 	// Needs to be called after one Button was changed
 	@Override
 	public void updateSlot(int slot) {
+		resetLastChangeTime();
 		if (!hasOpenViews()) return;
 
 		MenuView view;
@@ -461,6 +478,7 @@ public class Menu implements IMenu {
 			} else if (viewers.size() > 1) {
 				P.p.log("Too many viewers!");
 			}
+			view.setLastChangeTime(lastChange);
 
 			if (viewers.get(0) instanceof Player) {
 				Player player = (Player) viewers.get(0);
@@ -479,6 +497,7 @@ public class Menu implements IMenu {
 	}
 
 	private void updateButtons(Inventory inv, MenuView view, Player player, boolean fresh) {
+		view.setLastChangeTime(lastChange);
 		for (int i = 0; i < inv.getSize() && i < buttons.length; i++) {
 			if (buttons[i] == null) {
 				if (!fresh) {
@@ -498,13 +517,18 @@ public class Menu implements IMenu {
 	// Does not return null Buttons
 	@Override
 	public ButtonIterator<Button> iterator() {
-		return new ButtonIterator<Button>(this);
+		return new ButtonIterator<>(this);
 	}
 
 	// Iterate over all Buttons in this Menu that are assignable to the given class
 	@Override
 	public <T extends IButton> ButtonIterator<T> iterator(Class<T> clazz) {
-		return new ButtonIterator<T>(this, clazz);
+		return new ButtonIterator<>(this, clazz);
+	}
+
+	@Override
+	public List<MenuView> getOpenViews() {
+		return currentViews;
 	}
 
 	// Returns true if any Player is currently viewing this Menu
