@@ -99,8 +99,7 @@ public class FullyPagedMenu extends Menu implements PagedMenu {
 		}
 		FullyPagedMenu m = creatingNewMenuPage();
 		getMenuPages().addPage(m);
-		m.addButtonThisPage(button);
-		return true;
+		return m.addButtonThisPage(button);
 	}
 
 	public boolean addButtonThisPage(Button button) throws IllegalArgumentException {
@@ -189,6 +188,21 @@ public class FullyPagedMenu extends Menu implements PagedMenu {
 
 	public boolean removeButtonThisPage(Button button) {
 		return super.removeButton(button);
+	}
+
+	@Override
+	public void clear(boolean withTopRow) {
+		if (!isHead()) {
+			clearThisPage(withTopRow);
+			return;
+		}
+		pages.removeAllOtherPages();
+		clearThisPage(withTopRow);
+	}
+
+
+	public void clearThisPage(boolean withTopRow) {
+		super.clear(withTopRow);
 	}
 
 	@Override

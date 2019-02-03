@@ -14,9 +14,13 @@ import com.snow.menu.P;
 public class BPrevPage extends Button {
 
 	public BPrevPage(PagedMenuHandler pages) {
+		this(pages.getPageIndex(), pages.getNumPages());
+	}
+
+	public BPrevPage(int index, int numPages) {
 		super(Material.WHITE_BANNER, "Vorherige Seite");
-		setAmount(pages.getPageIndex());
-		setLoreLine(0, "Seite " + (pages.getPageIndex() + 1) + "/" + pages.getNumPages());
+		setAmount(index);
+		setLoreLine(0, "Seite " + (index + 1) + "/" + numPages);
 	}
 
 	// Add This Button to the default slot in the menu

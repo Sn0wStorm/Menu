@@ -297,7 +297,7 @@ public class SqlButtonSaver implements Runnable {
 			return;
 		}
 
-		P.p.log("loading Button: " + mat + "§r, " + clazz + " menu null? " + (menu == null ? "null" : menu.getName()));
+		P.p.log("loading Button: " + mat + "§r");
 
 		Material type = Material.getMaterial(mat);
 		if (type == null) return;

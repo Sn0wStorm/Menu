@@ -1,6 +1,7 @@
 package com.snow.testmenu.Menus;
 
 import com.snow.menu.Buttons.Button;
+import com.snow.menu.Menus.Test.MListTest;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
@@ -38,6 +39,7 @@ public class MTestMain extends Menu implements EditableMenu {
 		addButton(new BTestSettings(), 3, 4);
 		addButton(new BMenuBook(), 3, 0);
 		addButton(new BTestItemSelect(Material.EMERALD_ORE), 3, 5);
+		addButton(new BShowMenu(Material.EMERALD_BLOCK, "Test Liste").setMenuToShow(new MListTest()), 3, 6);
 		editTest = new BShowMenu(Material.DIAMOND_AXE, "Bearbeitungs Test", "ZLAT");
 		addButton(editTest, 5, 3);
 		P.p.getServer().getScheduler().runTaskLater(P.p, new Runnable() {

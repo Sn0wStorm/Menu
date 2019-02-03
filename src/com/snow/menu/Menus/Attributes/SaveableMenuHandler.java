@@ -92,13 +92,13 @@ public class SaveableMenuHandler {
 	// Load a menu from Sql or file
 	// set setSaved to true if the menu should be saved to sql with next save
 	public static SaveableMenu load(String name, String clazz, int size, String extra, boolean setSavedSql) {
-		P.p.log("loading Menu: " + name + ", " + clazz + ", size: " + size);
+		P.p.log("loading Menu: " + name);
 		if (name == null || clazz == null) return null;
 		try {
 			Class<? extends SaveableMenu> menuClass = Class.forName(clazz).asSubclass(SaveableMenu.class);
 			SaveableMenu menu = menuClass.getConstructor(String.class, int.class).newInstance(name, size);
 
-			P.p.log("menu loaded! class: " + menu.getClass().getName());
+			//P.p.log("menu loaded! class: " + menu.getClass().getName());
 
 			FileConfiguration c = null;
 			if (extra != null) {
@@ -120,9 +120,9 @@ public class SaveableMenuHandler {
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			if (setSavedSql) {
-				P.p.log("Loading as Unknown Menu");
+				P.p.log("Loading as Unknown Menu: " + name);
 				loadUnknown(name, clazz, size);
 			}
 		} catch (ClassCastException e) {

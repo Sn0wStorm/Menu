@@ -250,7 +250,7 @@ public class Menu implements IMenu {
 	}
 
 	// Remove all buttons in this Menu
-	// If alsoBasic is true, also remove the Top Bar where the Home and Back buttons might be
+	// If withTopRow is true, also remove the first row where the Home and Back buttons might be
 	@Override
 	public void clear(boolean withTopRow) {
 		for (int i = withTopRow ? 0 : 9; i < buttons.length; i++) {

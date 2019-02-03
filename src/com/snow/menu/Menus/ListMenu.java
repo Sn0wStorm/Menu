@@ -3,6 +3,7 @@ package com.snow.menu.Menus;
 import com.snow.menu.Buttons.Button;
 import com.snow.menu.Buttons.Tools.ButtonCreator;
 import com.snow.menu.Menus.Attributes.PagedMenuHandler;
+import com.snow.menu.P;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -92,11 +93,18 @@ public class ListMenu<E> extends FullyPagedMenu {
 	}
 
 	/*
+	  Creates a ListMenu from a Collection of Buttons
+	 */
+	public static ListMenu<Button> withButtons(String name, Collection<Button> buttons) {
+		return new ListMenu<>(name, buttons, b -> b);
+	}
+
+	/*
 	  Creates a ListMenu from a Collection of ButtonCreators
 	  A ButtonCreator is an object that can be directly created into a Button
 	 */
 	public static ListMenu<ButtonCreator> withButtonCreators(String name, Collection<ButtonCreator> buttonCreators) {
-		return new ListMenu<>(name, buttonCreators, (bc, index) -> bc.createButton(index));
+		return new ListMenu<>(name, buttonCreators, ButtonCreator::createButton);
 	}
 
 	/*
@@ -130,7 +138,11 @@ public class ListMenu<E> extends FullyPagedMenu {
 	// This is the same as addButton() but it takes an element E and applies the function
 	public boolean addNonListButton(E obj) {
 		if (function != null) {
-			return super.addButton(function.apply(obj));
+			Button button = function.apply(obj);
+			if (super.addButton(button)) {
+				updateButton(button);
+				return true;
+			}
 		}
 		return false;
 	}
@@ -139,7 +151,12 @@ public class ListMenu<E> extends FullyPagedMenu {
 	// This is the same as addButton() but it takes an element E and applies the function
 	// The index has to be given if the function needs an index as argument
 	public boolean addNonListButton(E obj, int index) {
-		return super.addButton(applyFunction(obj, index));
+		Button button = applyFunction(obj, index);
+		if (super.addButton(button)) {
+			updateButton(button);
+			return true;
+		}
+		return false;
 	}
 
 	// Get The underlying List that this Menu is populated from
@@ -191,21 +208,22 @@ public class ListMenu<E> extends FullyPagedMenu {
 		if (getMenuPages() != null && !isHead()) return super.onPrepareOpeningMenu(player);
 		long time = System.currentTimeMillis();
 		if (isShouldRebuild() || (isAutoUpdate() && time - lastUpdate > getUpdateInterval() * 1000)) {
-			setLastUpdate(time);
-			setShouldRebuild(false);
 			rebuildAll();
 		}
 		return super.onPrepareOpeningMenu(player);
 	}
 
 	public void rebuildAll() {
-		clear(false);
+		setLastUpdate(System.currentTimeMillis());
+		setShouldRebuild(false);
+		// Clear only this Page, the others will fall away and be regenerated
+		clearThisPage(false);
 		if (intFunction != null) {
 			init(intFunction);
 		} else {
 			init(collection, function, biFunction);
 		}
-		//P.p.log("Rebuilt a Menu");
+		P.p.log("Rebuilt Menu: " + getName());
 	}
 
 	public void rebuildAllNextOpen() {

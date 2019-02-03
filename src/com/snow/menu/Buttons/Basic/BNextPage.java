@@ -14,9 +14,13 @@ import com.snow.menu.P;
 public class BNextPage extends Button {
 
 	public BNextPage(PagedMenuHandler pages) {
+		this(pages.getPageIndex(), pages.getNumPages());
+	}
+
+	public BNextPage(int index, int numPages) {
 		super(Material.WHITE_BANNER, "Nächste Seite");
-		setAmount(pages.getPageIndex() + 2);
-		setLoreLine(0, "Seite " + (pages.getPageIndex() + 1) + "/" + pages.getNumPages());
+		setAmount(index + 2);
+		setLoreLine(0, "Seite " + (index+ 1) + "/" + numPages);
 	}
 
 	// Add This Button to the default slot in the menu

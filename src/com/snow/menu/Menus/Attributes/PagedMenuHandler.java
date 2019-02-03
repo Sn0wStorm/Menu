@@ -13,6 +13,7 @@ import java.util.stream.Stream;
 import com.snow.menu.Buttons.Basic.BEmptyTopTile;
 import com.snow.menu.Buttons.Button;
 import com.snow.menu.Menu;
+import com.snow.menu.P;
 import org.bukkit.entity.Player;
 
 import com.snow.menu.Buttons.Basic.BNextPage;
@@ -34,10 +35,10 @@ public class PagedMenuHandler<M extends PagedMenu> {
 			menu.setMenuPages(h);
 			menu.showBasicButtons(true);
 			if (i < menus.length - 1) {
-				menu.addButton(new BNextPage(h), BNextPage.getDefaultSlot());
+				menu.addButton(new BNextPage(i, menus.length), BNextPage.getDefaultSlot());
 			}
 			if (i > 0) {
-				menu.addButton(new BPrevPage(h), BPrevPage.getDefaultSlot());
+				menu.addButton(new BPrevPage(i, menus.length), BPrevPage.getDefaultSlot());
 			}
 		}
 	}
@@ -170,6 +171,10 @@ public class PagedMenuHandler<M extends PagedMenu> {
 	}
 
 	public void removePageIfEmpty() {
+		if (pages.get(0) == this) {
+			// We cannot remove the first page
+			return;
+		}
 		int removeToIndex = getMenu().isShowingBasicButtons() ? 9 : 0;
 		Button[] buttons = getMenu().getButtons();
 		for (int i = buttons.length - 1; i >= removeToIndex; i--) {
@@ -181,15 +186,31 @@ public class PagedMenuHandler<M extends PagedMenu> {
 	}
 
 	public void removePage() {
+		if (pages.size() <= 1) {
+			// We cannot remove all pages
+			return;
+		}
 		pages.remove(index);
 		updateIndexes();
 	}
 
 	public void removePage(int index) {
+		if (pages.size() <= 1) {
+			// We cannot remove all pages
+			return;
+		}
 		if (index >= 0 && pages.size() > index) {
 			pages.remove(index);
 			updateIndexes();
 		}
+	}
+
+	public void removeAllOtherPages() {
+		// Remove all but the first Page
+		if (pages.size() > 1) {
+			pages.subList(1, pages.size()).clear();
+		}
+		updateIndexes();
 	}
 
 	public boolean isPageOfThisMenu(Menu other) {
